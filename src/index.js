@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-19 20:23:57
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-20 11:28:35
+ * LastEditTime : 2019-12-20 11:38:26
  * FilePath     : /autoCommit/index.js
  * Description  : 自动commit
  * https://github.com/OBKoro1
@@ -20,11 +20,22 @@ class autoCommit {
   init() {
     const time = moment().format('DD/MM/YYYY HH:MM:ss');
     fs.writeFileSync('./test.md', time, 'utf-8');
-    this.commit()
+    this.commit();
   }
   commit() {
-    this.myExecSync(`sudo systemsetup -setusingnetworktime off && sudo systemsetup -setdate 09/02/19 && sudo systemsetup -setusingnetworktime on`)
-    this.myExecSync(`git add . && git commit -m 'autoCommit' && git pull && git push`)
+    try {
+      this.myExecSync(
+        `sudo systemsetup -setusingnetworktime off && sudo systemsetup -setdate 09/02/19 && sudo systemsetup -setusingnetworktime on`
+      );
+    } catch (err) {
+      this.myExecSync(`sudo visudo && koro ALL = NOPASSWD: /sbin/poweroff, /sbin/start, /sbin/stop`)
+      this.myExecSync(
+        `sudo systemsetup -setusingnetworktime off && sudo systemsetup -setdate 09/02/19 && sudo systemsetup -setusingnetworktime on`
+      );
+    }
+    this.myExecSync(
+      `git add . && git commit -m 'autoCommit' && git pull && git push`
+    );
   }
 
   myExecSync(cmd) {
@@ -40,7 +51,7 @@ class autoCommit {
       });
       return res;
     } catch (err) {
-      console.log(err,err.message)
+      console.log(err, err.message, err.stack);
       console.log(`执行命令出错:${cmd}`);
     }
   }
