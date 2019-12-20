@@ -1,0 +1,22 @@
+{
+  "name": "autocommit",
+  "version": "1.0.0",
+  "description": "自动commit工具",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OBKoro1/autoCommit.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OBKoro1/autoCommit/issues"
+  },
+  "homepage": "https://github.com/OBKoro1/autoCommit#readme",
+  "dependencies": {
+    "moment": "^2.24.0"
+  }
+}
