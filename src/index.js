@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-19 20:23:57
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-20 11:27:13
+ * LastEditTime : 2019-12-20 11:28:35
  * FilePath     : /autoCommit/index.js
  * Description  : 自动commit
  * https://github.com/OBKoro1
@@ -40,7 +40,7 @@ class autoCommit {
       });
       return res;
     } catch (err) {
-      console.log(err.message)
+      console.log(err,err.message)
       console.log(`执行命令出错:${cmd}`);
     }
   }
