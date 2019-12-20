@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-19 20:23:57
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-20 15:40:06
+ * LastEditTime : 2019-12-20 15:46:58
  * FilePath     : /autoCommit/index.js
  * Description  : 自动commit
  * https://github.com/OBKoro1
@@ -23,8 +23,9 @@ class autoCommit {
     this.commit();
   }
   commit() {
+    // git commit --amend --date="2019-01-02T00:00:00+0800" -am 'autoCommit'
     this.myExecSync(
-      `git add . && git commit --amend --date="2019-01-02T00:00:00+0800" -am 'autoCommit' && git push`
+      `git add . && git commit -m 'autoCommit' --date='2019-01-02T00:00:00+0800' && git pull && git push origin master`
     );
   }
 
