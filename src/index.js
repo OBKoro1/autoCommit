@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-19 20:23:57
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-22 02:01:14
+ * LastEditTime : 2019-12-23 19:56:54
  * FilePath     : /autoCommit/index.js
  * Description  : 自动commit
  * https://github.com/OBKoro1
@@ -15,13 +15,11 @@ const fs = require('fs');
 class autoCommit {
   constructor() {
     this.init();
-
   }
-  getData(paramsObj) {
-    let time1 = '2019-01-02';
-    let time2 = '2019-01-02';
-    this.getAllDay(time1, time2);
-    console.log('timeArr', this.timeArr)
+  getData() {
+    this.getAllDay(this.paramsObj.beginDay, this.paramsObj.endDay);
+    this.readyCommit();
+    console.log('timeArr', this.timeArr);
   }
   formatTime(time) {
     return `${time} 08:00`;
@@ -36,42 +34,55 @@ class autoCommit {
     endDate.setUTCFullYear(endSplit[0], endSplit[1] - 1, endSplit[2]);
     const beginNumber = beginDate.getTime();
     const endNumber = endDate.getTime();
-    for (var k = beginNumber; k <= endNumber;) {
-      let day = new Date(parseInt(k))
-      let dayFormat = moment(day).format('YYYY-MM-DD')
-      this.timeArr.push(dayFormat)
+    for (let k = beginNumber; k <= endNumber; ) {
+      const day = new Date(parseInt(k));
+      const dayFormat = moment(day).format('YYYY-MM-DD');
+      this.timeArr.push(dayFormat);
       k = k + 24 * 60 * 60 * 1000;
     }
   }
   // 只commit今天
   commitToday() {
     const time = moment().format('DD/MM/YYYY HH:MM:ss');
-    // TODO: 
+    // TODO:
   }
   init() {
     let paramsObj = {
-      beginDay: '2019-01-02',
-      endDay: '2019-01-10',
+      beginDay: '2019-02-02',
+      endDay: '2019-03-02',
+      itemSrc: '../../testCommit', // 要commit的项目地址
       commitNumber: 1 // 每天commit 次数
-    }
-    // TODO: 数组 每段时间commit几次，参数如上
-    // 今天
-    if (!paramsObj.endDay) {
-      paramsObj.endDay = moment().format('YYYY-MM-DD')
-    }
+    };
+    let defaultOption = {
+      endDay: moment().format('YYYY-MM-DD'), // 默认为今天
+      fileSrc: `${paramsObj.itemSrc}/commit.md`
+    };
+    this.paramsObj = paramsObj;
     this.getData();
     // this.commit();
   }
   readyCommit() {
-    // const time = moment().format('DD/MM/YYYY HH:MM:ss');
-    let time3 = moment('2019-01-02 08:00').format();
-    fs.writeFileSync('./test.md', time, 'utf-8');
-
+    // 遍历日期
+    this.timeArr.forEach(item => {
+      // 每个日期commit次数
+      for (let i = 0; i++; i < this.paramsObj.commitNumber) {
+        let time = this.formatTime(item); // 2019-01-02 08:00
+        time = moment(time).format(); // 2019-01-02T00:00:00+0800
+        fs.writeFileSync(
+          `${this.paramsObj.itemSrc}/commit.md`,
+          `${time}${i}`,
+          'utf-8'
+        );
+        console.log('each', time);
+      }
+      // this.commit()
+    });
   }
-  commit() {
+  commit(commitTime) {
     // git commit --amend --date="2019-01-02T00:00:00+0800" -am 'autoCommit'
+    // TODO: cd 项目 重写文件和commit
     this.myExecSync(
-      `git add . && git commit -m 'autoCommit' --date='2019-01-02T00:00:00+0800' && git pull && git push origin master`
+      `cd ${this.paramsObj.itemSrc} && git add . && git commit -m 'autoCommit' --date='${commitTime}' && git pull && git push origin master`
     );
   }
 
