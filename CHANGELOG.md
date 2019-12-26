@@ -2,7 +2,7 @@
 
 ### 如果觉得本插件还不错的话，给个[Star](https://github.com/OBKoro1/autoCommit)吧~
 
-<!-- TODO: package 关键词 -->
+<!-- TODO: package.json 抄一下 -->
 <!-- TODO: wiki readme -->
 <!-- TODO: npm包形式 -->
 
