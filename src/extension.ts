@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-25 15:15:42
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-26 20:55:02
+ * LastEditTime : 2019-12-26 21:00:27
  * FilePath     : /autoCommit/src/extension.ts
  * Description  : 自动commit插件 入口
  * https://github.com/OBKoro1
@@ -19,7 +19,7 @@ export function activate(context: vscode.ExtensionContext) {
 
 	const autoCommit = vscode.commands.registerCommand('extension.autoCommit', () => {
 		// new ExtensionLogic(context)
-		vscode.window.showInformationMessage('hello koro22221')
+		vscode.window.showInformationMessage('hello koro22333')
 	  })
 
   // 当插件关闭时被清理的可清理列表

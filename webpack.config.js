@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-26 17:42:32
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-26 20:04:14
+ * LastEditTime : 2019-12-26 20:58:58
  * FilePath     : /autoCommit/webpack.config.js
  * Description  : webpack 配置
  * https://github.com/OBKoro1
@@ -15,7 +15,7 @@
 
 const path = require('path')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const outputPathName = 'dist'
+const outputPathName = 'out'
 
 const pathResolve = p => {
   return path.resolve(__dirname, p)

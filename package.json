@@ -2,6 +2,7 @@
   "name": "autoCommit",
   "displayName": "autoCommit",
   "description": "自动提交commit到github",
+  "publisher": "OBkoro1",
   "version": "0.0.1",
   "scripts": {
     "build": "vsce package",
@@ -13,7 +14,11 @@
     "test": "yarn run compile && node ./node_modules/vscode/bin/test"
   },
   "engines": {
-    "vscode": "^1.40.0"
+    "vscode": "^1.41.0"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/OBKoro1/autoCommit"
   },
   "categories": [
     "Other"
@@ -21,7 +26,7 @@
   "activationEvents": [
     "onCommand:extension.autoCommit"
   ],
-  "main": "./dist/extension.js",
+  "main": "./out/extension.js",
   "contributes": {
     "commands": [
       {
