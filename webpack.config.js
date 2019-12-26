@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-26 17:42:32
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-26 17:44:26
+ * LastEditTime : 2019-12-26 20:04:14
  * FilePath     : /autoCommit/webpack.config.js
  * Description  : webpack 配置
  * https://github.com/OBKoro1
@@ -55,14 +55,6 @@ const config = {
           }
         ]
       }
-      // {
-      //   test: /\.(woff2?|eot|ttf|otf)(\?.*)?$/,
-      //   loader: 'url-loader',
-      //   options: {
-      //     limit: 10000,
-      //     name: pathResolve(`${outputPathName}/fonts/[name].[hash:7].[ext]`)
-      //   }
-      // }
     ]
   },
   plugins: [

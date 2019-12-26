@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-26 13:49:02
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-26 15:24:08
+ * LastEditTime : 2019-12-26 20:04:51
  * FilePath     : /autoCommit/src/models/WebView.ts
  * Description  : 创建webview
  * https://github.com/OBKoro1
@@ -12,7 +12,7 @@ import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
 import { showMessage } from '../util/vscodeUtil';
-import { webviewMsg }  from '../util/dataStatement'
+import { webviewMsg } from '../util/dataStatement';
 
 // webview 设置
 interface WebviewPanelOption {
@@ -37,6 +37,7 @@ class WebView {
     // 获取资源地址
     // TODO: 打包
     const srcPath = process.env.NODE_ENV !== 'production' ? 'src' : 'dist';
+    console.log('srcPath', srcPath, process.env.NODE_ENV);
     this.currentPanel = vscode.window.createWebviewPanel(
       WebviewPanelOption.type,
       WebviewPanelOption.title,
