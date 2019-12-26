@@ -1,0 +1,101 @@
+<!--
+ * @Github: https://github.com/OBKoro1
+ * @Author: OBKoro1
+ * @Date: 2019-06-29 13:27:49
+ * @LastEditors: OBKoro1
+ * @LastEditTime: 2019-11-27 11:32:30
+ * @Description: webview 登录页面
+ -->
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>晓黑板登录</title>
+
+  <link href="../assets/styles/base.css" rel="stylesheet" />
+  <link href="../assets/styles/login.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div class="form-container text-center v-cloak" id="xpLogin">
+    <div class="form-head">
+      <p class="form-title">晓黑板账号密码登录</p>
+    </div>
+    <div class="form-input-group">
+      <input ref="elUserName" @keyup.enter="login" type="text" class="form-input" placeholder="一统账号" v-model.number="userName" />
+    </div>
+    <div class="form-input-group">
+      <input ref="elPassword" @keyup.enter="login" type="password" class="form-input" placeholder="一统密码" v-model="password" />
+    </div>
+    <div class="form-input-group">
+      <a href="javascript:;" class="btn-login" @click="login">登录</a>
+    </div>
+  </div>
+
+  <script src="../assets/scripts/vue.min.js"></script>
+  <script>
+    const vscode = acquireVsCodeApi()
+
+    new Vue({
+      data() {
+        return {
+          // userName: 18850985993,
+          // password: 'HgbOBKoro1'
+          userName: '',
+          password: ''
+        }
+      },
+      mounted() {
+        this.initListener()
+      },
+      methods: {
+        // 登录
+        login() {
+          const { elUserName, elPassword } = this.$refs
+          const { userName, password } = this.$data
+          const formData = {
+            username: String(userName),
+            password: String(password)
+          }
+          if (!userName) {
+            this.postMessage('用户名不能为空')
+            elUserName.focus()
+            return
+          }
+
+          if (!password) {
+            this.postMessage('密码不能为空')
+            elPassword.focus()
+            return
+          }
+
+          this.postMessage('user-login-message', 'event', formData)
+        },
+        // 发送消息到插件
+        postMessage(text, command = 'alert', params) {
+          vscode.postMessage({
+            command,
+            text,
+            params
+          })
+        },
+
+        // 注册
+        initListener() {
+          window.addEventListener('message', event => {
+            console.log('event', event)
+            const { command, data } = event.data
+            console.log('登录成功 addEventListener', event)
+            if (command === 'success') {
+              // 登录成功
+            }
+          })
+        },
+      }
+    }).$mount('#xpLogin')
+  </script>
+</body>
+
+</html>
