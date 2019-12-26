@@ -1,63 +1,21 @@
 {
-  "name": "autoCommit",
-  "displayName": "autoCommit",
-  "description": "自动提交commit到github",
-  "version": "0.0.1",
+  "name": "autocommit",
+  "version": "1.0.0",
+  "description": "自动commit工具",
+  "main": "src/index.js",
   "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile",
-    "test": "node ./out/test/runTest.js"
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "engines": {
-    "vscode": "^1.40.0"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OBKoro1/autoCommit.git"
   },
-  "categories": [
-    "Other"
-  ],
-  "activationEvents": [
-    "onCommand:extension.autoCommit"
-  ],
-  "main": "./out/extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "extension.autoCommit",
-        "title": "Github自动提交 autoCommit"
-      }
-    ]
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/OBKoro1/autoCommit/issues"
   },
-  "keywords": [
-    "vscode korofileheader",
-    "korofileheader",
-    "annotation",
-    "comment",
-    "vscode comment",
-    "vscode annotation",
-    "vscode 注释",
-    "vscode 文件头部注释",
-    "注释",
-    "文件注释",
-    "头部注释",
-    "函数注释",
-    "fileheader",
-    "vscode-fileheader",
-    "Document This",
-    "obkoro1",
-    "koro1"
-  ],
-  "devDependencies": {
-    "@types/glob": "^7.1.1",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^12.11.7",
-    "@types/vscode": "^1.41.0",
-    "glob": "^7.1.5",
-    "mocha": "^6.2.2",
-    "typescript": "^3.6.4",
-    "tslint": "^5.20.0",
-    "vscode-test": "^1.2.2"
-  },
+  "homepage": "https://github.com/OBKoro1/autoCommit#readme",
   "dependencies": {
     "moment": "^2.24.0"
   }
