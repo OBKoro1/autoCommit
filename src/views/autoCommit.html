@@ -11,9 +11,21 @@
 
   <body>
     <div id="app">
+      <div class="form-title">Github自动提交commit工具</div>
       <el-container>
-        <el-header>Header</el-header>
-        <el-main>Main</el-main>
+        <el-main>
+          <!-- TODO: tip -->
+            <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+                <el-form-item  label="项目地址" class="form_item" prop="itemSrc">
+                    <div>{{ form.itemSrc }}</div>
+                </el-form-item>
+            </el-form>
+            <el-form ref="form" :model="form" :rules="rules" label-width="100px">
+              <el-form-item  label="commit次数" class="form_item" prop="commitNumber">
+                  <el-input-number v-model="form.commitNumber"  :min="1" :max="100" size="mini" ></el-input-number>
+              </el-form-item>
+          </el-form>
+        </el-main>
       </el-container>
     </div>
     </div>
@@ -21,17 +33,29 @@
   <script src="../assets/scripts/vue.min.js"></script>
   <script src="../assets/scripts/element2.13.min.js"></script>
   <script>
-    const vscode = acquireVsCodeApi();
     new Vue({
       el: '#app',
       data() {
         return {
-          // userName: 18850985993,
-          // password: 'HgbOBKoro1'
+          form: {
+            // itemSrc: '/Users/koro/work/web_my/testCommit',
+            itemSrc: '点击选择要commit的项目文件夹',
+            timeArr: [
+              
+            ],
+            commitNumber: 1,
+          },
+          rules:  {
+            itemSrc: [
+              {
+                required: true
+              }
+            ]
+          }
         };
       },
       mounted() {
-        this.initListener();
+        // this.initListener();
       },
       methods: {
         // 登录

@@ -1,0 +1,30 @@
+#app{
+    background: #272822;
+    height: 100vh;
+    color: #fff;
+  }
+  
+  .el-main {
+    background-color: #272822;
+  }
+  
+  .form_item {
+    font-size: 16px;
+  }
+  .form_item .el-form-item__label{
+    font-size: 16px;
+    color: #fff;
+  }
+  
+  .form-title {
+    padding-top: 20px;
+    font-weight: bold;
+    font-size: 30px;
+    text-align: center;
+  }
+  
+  body > .el-container {
+    margin-bottom: 40px;
+  }
+  
+  
