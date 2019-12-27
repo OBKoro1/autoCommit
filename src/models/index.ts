@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-25 17:08:18
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-26 17:41:05
+ * LastEditTime : 2019-12-27 14:40:39
  * FilePath     : /autoCommit/src/models/index.ts
  * Description  : 插件逻辑入口
  * https://github.com/OBKoro1
@@ -20,6 +20,7 @@ class ExtensionLogic {
   public constructor(context: vscode.ExtensionContext) {
     this.context = context;
     this.autoCommitView  = new WebView(this.context, this.messageCallBack);
+    this.createView()
   }
   createView() {
       const option = {

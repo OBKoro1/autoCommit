@@ -15,22 +15,3 @@ body {
   overflow: auto;
 }
 
-a {
-  text-decoration: none;
-}
-
-.text-center {
-  text-align: center;
-}
-
-.text-right {
-  text-align: right;
-}
-
-.flex-fill {
-  flex: 1;
-}
-
-[v-cloak] {
-  display: none;
-}
