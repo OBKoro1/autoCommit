@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-26 13:49:02
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-26 20:04:51
+ * LastEditTime : 2019-12-29 19:01:20
  * FilePath     : /autoCommit/src/models/WebView.ts
  * Description  : 创建webview
  * https://github.com/OBKoro1
@@ -101,7 +101,7 @@ class WebView {
   // webview消息回调
   public handleMessage(message: webviewMsg) {
     const { command, data } = message;
-    if (command === 'event') {
+    if (command !== 'msg') {
       this.MessageCallBack(message);
       return;
     }

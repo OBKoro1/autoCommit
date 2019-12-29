@@ -1,106 +1,216 @@
 <!DOCTYPE html>
 <html>
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Github自动提交commit工具</title>
-    <link href="../assets/styles/element-ui2.13.min.css" rel="stylesheet" />
-    <link href="../assets/styles/base.css" rel="stylesheet" />
-    <link href="../assets/styles/autoCommit.css" rel="stylesheet" />
-  </head>
 
-  <body>
-    <div id="app">
-      <div class="form-title">Github自动提交commit工具</div>
-      <el-container>
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Github自动提交commit工具</title>
+  <link href="../assets/styles/element-ui2.13.min.css" rel="stylesheet" />
+  <link href="../assets/styles/base.css" rel="stylesheet" />
+  <link href="../assets/styles/autoCommit.css" rel="stylesheet" />
+</head>
+
+<body>
+  <div id="app">
+    <div class="form-title">Github自动提交commit工具</div>
+    <el-container>
+      <el-main>
+        <el-form ref="form" :model="form" :rules="rules" label-width="160px">
+          <el-form-item class="form_item" prop="itemSrc">
+            <label slot="label">
+              <el-tooltip class="item" content="要提交commit的仓库文件夹" placement="top-start">
+                <span>项目地址 :</span>
+              </el-tooltip>
+            </label>
+            <span>{{ form.itemSrc }}</span>
+            </el-input>
+          </el-form-item>
+          <el-form-item class="form_item" prop="fileName">
+            <label slot="label">
+              <el-tooltip class="item" content="默认写入commit内容的文件,位于项目的根目录，不存在会自动创建" placement="top-start">
+                <span>commit文件 :</span>
+              </el-tooltip>
+            </label>
+            <el-input class="input_form" v-model="form.fileName" @change="fileNameChange"></el-input>
+            </el-input>
+          </el-form-item>
+          <el-form-item class="form_item" prop="commitMsg">
+            <label slot="label">
+              <el-tooltip class="item" content="commit信息" placement="top-start">
+                <span>commit信息 :</span>
+              </el-tooltip>
+            </label>
+            <el-input class="input_form" v-model="form.commitMsg" @change="commitMsgChange"></el-input>
+            </el-input>
+          </el-form-item>
+          <el-form-item class="form_item" prop="commitNumber">
+            <label slot="label">
+              <el-tooltip class="item" content="时间范围内每个日期需要commit的次数" placement="top-start">
+                <span>commit次数 :</span>
+              </el-tooltip>
+            </label>
+            <el-input-number v-model="form.commitNumber" :min="1" :max="100" size="mini"></el-input-number>
+          </el-form-item>
+          <el-form-item v-for="(ele, index) in form.timeArr" :key="index" :prop="'timeArr.' + index + '.value'" :rules="{
+                required: true, message: '日期不能为空', trigger: 'blur'
+              }">
+            <label slot="label">
+              <!-- TODO: wiki：一个日期只能选中一次 去重 -->
+              <el-tooltip class="item" content="要commit的时间范围,可多选" placement="top-start">
+                <span>commit日期范围{{index+1}} :</span>
+              </el-tooltip>
+            </label>
+            <el-date-picker v-model="ele.value" size="middle" type="daterange" value-format="yyyy-MM-dd"
+              range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
+            </el-date-picker>
+            <el-button @click.prevent="removeTime(index)" :disabled="index === 0">删除</el-button>
+          </el-form-item>
+          <el-form-item>
+            <el-button type="primary" @click="submitForm('form')" :disabled="runNow">开始commit</el-button>
+            <el-button @click="addTimeRange">新增时间范围</el-button>
+            <el-button @click="addTimeRange" :disabled="!runNow">取消commit</el-button>
+          </el-form-item>
+        </el-form>
         <el-main>
-          <!-- TODO: tip -->
-            <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-                <el-form-item  label="项目地址" class="form_item" prop="itemSrc">
-                    <div>{{ form.itemSrc }}</div>
-                </el-form-item>
-            </el-form>
-            <el-form ref="form" :model="form" :rules="rules" label-width="100px">
-              <el-form-item  label="commit次数" class="form_item" prop="commitNumber">
-                  <el-input-number v-model="form.commitNumber"  :min="1" :max="100" size="mini" ></el-input-number>
-              </el-form-item>
-          </el-form>
+           <!-- TODO: 日志和wiki链接 github链接 -->
+          <el-input type="textarea" placeholder="请输入内容" v-model="paramsStr" disabled>
+          </el-input>
         </el-main>
-      </el-container>
-    </div>
-    </div>
-  </body>
-  <script src="../assets/scripts/vue.min.js"></script>
-  <script src="../assets/scripts/element2.13.min.js"></script>
-  <script>
-    new Vue({
-      el: '#app',
-      data() {
-        return {
-          form: {
-            // itemSrc: '/Users/koro/work/web_my/testCommit',
-            itemSrc: '点击选择要commit的项目文件夹',
-            timeArr: [
-              
-            ],
-            commitNumber: 1,
-          },
-          rules:  {
-            itemSrc: [
-              {
-                required: true
-              }
-            ]
-          }
-        };
-      },
-      mounted() {
-        // this.initListener();
-      },
-      methods: {
-        // 登录
-        login() {
-          const { elUserName, elPassword } = this.$refs;
-          const { userName, password } = this.$data;
-          const formData = {
-            username: String(userName),
-            password: String(password)
-          };
-          if (!userName) {
-            this.postMessage('用户名不能为空');
-            elUserName.focus();
-            return;
-          }
-
-          if (!password) {
-            this.postMessage('密码不能为空');
-            elPassword.focus();
-            return;
-          }
-
-          this.postMessage('user-login-message', 'event', formData);
-        },
-        // 发送消息到插件
-        postMessage(text, command = 'alert', params) {
-          vscode.postMessage({
-            command,
-            text,
-            params
-          });
-        },
-
-        // 注册
-        initListener() {
-          window.addEventListener('message', event => {
-            console.log('event', event);
-            const { command, data } = event.data;
-            console.log('登录成功 addEventListener', event);
-            if (command === 'success') {
-              // 登录成功
-            }
-          });
+      </el-main>
+    </el-container>
+  </div>
+  </div>
+</body>
+<script src="../assets/scripts/vue.min.js"></script>
+<script src="../assets/scripts/element2.13.min.js"></script>
+<script>
+  new Vue({
+    el: '#app',
+    data() {
+      // 项目地址验证
+      const itemSrcCheck = (rule, value, callback) => {
+        if (value !== '点击选择要commit的项目文件夹') {
+          callback();
+        } else {
+          callback(new Error('请选择要commit的项目文件夹'));
         }
       }
-    }).$mount('#xpLogin');
-  </script>
+      return {
+        paramsStr: '', // commit参数
+        runNow: false, // 运行中
+        form: {
+          // itemSrc: '/Users/koro/work/web_my/testCommit',
+          itemSrc: '点击选择要commit的项目文件夹',
+          fileName: 'commit.md',
+          commitMsg: 'autoCommit',
+          timeArr: [
+            {
+              value: ''
+            }
+          ],
+          commitNumber: 1,
+        },
+        rules: {
+          'itemSrc': [
+            {
+              validator: itemSrcCheck, // 项目地址
+              required: true,
+              message: '请选择要commit的项目文件夹'
+            }
+          ],
+          'fileName': [
+            {
+              required: true,
+              message: '请选择要写入内容的文件'
+            }
+          ],
+          'commitMsg': [
+            {
+              required: true,
+              message: '请填入要commit的内容'
+            }
+          ],
+          'commitNumber': [
+            {
+              required: true
+            }
+          ]
+        }
+      };
+    },
+    mounted() {
+      // this.initListener();
+    },
+    methods: {
+      submitForm(formName) {
+        this.$refs[formName].validate((valid) => {
+          if (valid) {
+            this.runCommit()
+          } else {
+            return false;
+          }
+        });
+      },
+      // 开始commit
+      runCommit() {
+        let params = this.form
+        params.format = this.mapTimeData()
+        this.runNow = true
+        this.paramsStr = JSON.stringify(params)
+        this.postMessage(params, 'commit');
+      },
+      // 发送消息到插件
+      postMessage(data, command) {
+        vscode.postMessage({
+          command,
+          data
+        });
+      },
+      // 注册
+      initListener() {
+        window.addEventListener('message', event => {
+          console.log('event', event);
+          const { command, data } = event.data;
+          console.log('登录成功 addEventListener', event);
+          if (command === 'success') {
+            // 登录成功
+          }
+        });
+      },
+      // 重置： commit成功和中断commit
+      reset() {
+        this.runNow = false;
+        this.paramsStr = ''
+
+      },
+      // 删除时间
+      removeTime(index) {
+        this.form.timeArr.splice(index, 1)
+      },
+      // format 一下时间 少嵌套一层
+      mapTimeData() {
+        return this.form.timeArr.map(item => {
+          return item.value
+        })
+      },
+      // 增加时间范围选择
+      addTimeRange() {
+        this.form.timeArr.push({
+          value: ''
+        });
+      },
+      fileNameChange(value) {
+        if (value === '') {
+          this.form.fileName = 'commit.md'
+        }
+      },
+      commitMsgChange(value) {
+        if (value === '') {
+          this.form.commitMsg = 'autoCommit'
+        }
+      },
+    }
+  }).$mount('#xpLogin');
+</script>
+
 </html>
