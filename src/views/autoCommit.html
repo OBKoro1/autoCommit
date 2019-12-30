@@ -22,7 +22,7 @@
                 <span>项目地址 :</span>
               </el-tooltip>
             </label>
-            <span>{{ form.itemSrc }}</span>
+            <span @click="chooseItem">{{ form.itemSrc }}</span>
             </el-input>
           </el-form-item>
           <el-form-item class="form_item" prop="fileName">
@@ -55,7 +55,7 @@
                 required: true, message: '日期不能为空', trigger: 'blur'
               }">
             <label slot="label">
-              <!-- TODO: wiki：一个日期只能选中一次 去重 -->
+              <!-- TODO: wiki：一个日期只能选中一次 去重 sort排序 切割字符串 单独比较 -->
               <el-tooltip class="item" content="要commit的时间范围,可多选" placement="top-start">
                 <span>commit日期范围{{index+1}} :</span>
               </el-tooltip>
@@ -66,14 +66,33 @@
             <el-button @click.prevent="removeTime(index)" :disabled="index === 0">删除</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('form')" :disabled="runNow">开始commit</el-button>
+            <el-button type="primary" @click="submitForm('form')" :disabled="runNow !== 1 && runNow!== 0">开始commit</el-button>
             <el-button @click="addTimeRange">新增时间范围</el-button>
-            <el-button @click="addTimeRange" :disabled="!runNow">取消commit</el-button>
+            <el-button @click="reset" :disabled="runNow === 1">取消commit</el-button>
+            <el-button @click="clearLog" :disabled="showText.logStr !== ''">清空日志</el-button>
           </el-form-item>
         </el-form>
+        <div class="form-title2">日志和文档</div>
         <el-main>
-           <!-- TODO: 日志和wiki链接 github链接 -->
-          <el-input type="textarea" placeholder="请输入内容" v-model="paramsStr" disabled>
+          <div class="log_form_father">
+            <el-form label-width="160px">
+              <el-form-item label="插件运行日志 :">
+                <el-input  @input="formatLog" type="textarea"
+                :autosize="{ minRows: 1, maxRows: 8}"
+                placeholder="无法输入 仅用于展示" v-model="showText.logStr" :disabled="runNow === 1 || runNow === 0">
+              </el-form-item>
+              <el-form-item label="开始commit的参数 :">
+                <el-input  @input="watchParamsChange" type="textarea"
+                :autosize="{ minRows: 1, maxRows: 4}"
+                placeholder="无法输入 仅用于展示" v-model="showText.paramsStr" :disabled="showText.paramsStr === ''">
+              </el-form-item>
+              <el-form-item label="wiki文档 :">
+                <el-link href="https://element.eleme.io" type="primary"  target="_blank">Readme</el-link>
+                <el-link href="https://element.eleme.io" type="primary" target="_blank">更新日志</el-link>
+              </el-form-item>
+              <div class="tip">觉得这个插件还不错的话, 请给我点个<el-link href="https://element.eleme.io" type="primary"  target="_blank">Star⭐️</el-link>吧~</div>
+          </div>
+          </el-form>
           </el-input>
         </el-main>
       </el-main>
@@ -84,6 +103,7 @@
 <script src="../assets/scripts/vue.min.js"></script>
 <script src="../assets/scripts/element2.13.min.js"></script>
 <script>
+  const vscode = acquireVsCodeApi()
   new Vue({
     el: '#app',
     data() {
@@ -96,8 +116,13 @@
         }
       }
       return {
-        paramsStr: '', // commit参数
-        runNow: false, // 运行中
+        showText:{
+          oldParams: '', // 保存的参数
+          paramsStr: '', // commit参数
+          logArr: [], // 保存的日志
+          logStr: '', // 
+        },
+        runNow: 0, // 0 初始化 1运行中 2运行结束 3取消运行
         form: {
           // itemSrc: '/Users/koro/work/web_my/testCommit',
           itemSrc: '点击选择要commit的项目文件夹',
@@ -139,7 +164,7 @@
       };
     },
     mounted() {
-      // this.initListener();
+      this.initListener();
     },
     methods: {
       submitForm(formName) {
@@ -154,13 +179,15 @@
       // 开始commit
       runCommit() {
         let params = this.form
-        params.format = this.mapTimeData()
-        this.runNow = true
-        this.paramsStr = JSON.stringify(params)
-        this.postMessage(params, 'commit');
+        params.formatTime = this.mapTimeData()
+        this.runNow = 1
+        this.showText.paramsStr = JSON.stringify(params)
+        this.showText.oldParams = this.showText.paramsStr
+        // this.mockLog()
+        this.postMessage('commit', params);
       },
       // 发送消息到插件
-      postMessage(data, command) {
+      postMessage(command, data) {
         vscode.postMessage({
           command,
           data
@@ -168,20 +195,55 @@
       },
       // 注册
       initListener() {
+        // TODO: 通信问题 接收不到
         window.addEventListener('message', event => {
-          console.log('event', event);
           const { command, data } = event.data;
-          console.log('登录成功 addEventListener', event);
-          if (command === 'success') {
-            // 登录成功
-          }
+          console.log('data',data)
+          console.log('event', event,command,data);
+          // console.log('登录成功 addEventListener', event);
+          // if (command === 'success') {
+          //   // 登录成功
+          // }
         });
       },
       // 重置： commit成功和中断commit
       reset() {
-        this.runNow = false;
-        this.paramsStr = ''
-
+        // TODO: runNow 3 取消运行
+        this.runNow = 2;
+        this.showText.paramsStr = ''
+        this.showText.oldParams = ''
+      },
+      // 写html时用
+      mockLog(){
+        this.showText.logArr = [
+        'res 开始 undefined',
+        'res 结束',
+        'log 开始 [{"commit": "a6b5f3d","author": "OBKoro1 <1677593011@qq.com>","date": "2019-12-26 21:05:57 +0800","message": "init"}]',
+        'log 结束',
+        'commit内容 2019-12-27T08:00:00+08:000',
+        '总commit次数1'
+        ]
+        let num = 0;
+       let timeId =  setInterval(() => {
+          if(num< 100){
+            num++
+            this.showText.logArr.unshift(`一些文字${num}`)
+            this.formatLog()
+          }else{
+            this.reset()
+            clearInterval(timeId)
+          }
+        }, 1000);
+      },
+      clearLog(){
+        this.showText.logArr = []
+        this.showText.logStr = ''
+      },
+      formatLog(){
+        this.showText.logStr = this.showText.logArr.join(`\n`)
+      },
+      watchParamsChange(){
+        this.showText.paramsStr = this.showText.oldParams
       },
       // 删除时间
       removeTime(index) {
@@ -192,6 +254,9 @@
         return this.form.timeArr.map(item => {
           return item.value
         })
+      },
+      chooseItem() {
+          this.postMessage('choose-item')
       },
       // 增加时间范围选择
       addTimeRange() {

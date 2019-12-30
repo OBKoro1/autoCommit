@@ -2,38 +2,74 @@
  * Author       : OBKoro1
  * Date         : 2019-12-25 17:08:18
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-27 14:40:39
+ * LastEditTime : 2019-12-30 21:02:57
  * FilePath     : /autoCommit/src/models/index.ts
  * Description  : 插件逻辑入口
  * https://github.com/OBKoro1
  */
 import * as vscode from 'vscode';
 import WebView from './WebView';
-import { webviewMsg }  from '../util/dataStatement'
-
+import { webviewMsg } from '../util/dataStatement';
+import { setPanelWebview } from '../util/vscodeUtil';
+import CommitHandle from './commitHandle';
+import { outputLog } from '../util/vscodeUtil';
+import * as fs from 'fs';
 
 class ExtensionLogic {
   public readonly context: vscode.ExtensionContext;
   public MessageCallBack: any;
   public autoCommitView: WebView;
-  
+  public CommitHandle: any;
+
   public constructor(context: vscode.ExtensionContext) {
     this.context = context;
-    this.autoCommitView  = new WebView(this.context, this.messageCallBack);
-    this.createView()
+    this.autoCommitView = new WebView(
+      this.context,
+      this.messageCallBack.bind(this)
+    );
+    setPanelWebview(this.autoCommitView);
+    this.createView();
   }
   createView() {
-      const option = {
-        type: 'autoCommit',
-        title: 'Github自动提交commit工具',
-        fileName: 'autoCommit'
-      }
-    this.autoCommitView.create(option)
+    const option = {
+      type: 'autoCommit',
+      title: 'Github自动提交commit工具',
+      fileName: 'autoCommit'
+    };
+    this.autoCommitView.create(option);
   }
   // 处理webview的消息
   private messageCallBack(message: webviewMsg) {
-    if (message.data.id === 'user-login-message') {
-    //   this.userLogin(message.params);
+    if (message.command === 'commit') {
+      this.CommitHandle = new CommitHandle(message);
+    } else if (message.command === 'choose-item') {
+      this.publishChooseFile();
+    }
+  }
+  async publishChooseFile() {
+    const urlArr: any = await vscode.window.showOpenDialog({
+      canSelectFiles: false, // 允许选择文件
+      canSelectFolders: true, // 是否可以选择文件夹
+      canSelectMany: false // 是否可以选择多个文件
+    });
+    const itemSrc = urlArr[0].path;
+    if (this.hasGit(itemSrc)) {
+      this.autoCommitView.postMessage('choose item success', itemSrc);
+    } else {
+      outputLog('项目地址错误', `${itemSrc}根目录没有.git文件夹`);
+    }
+  }
+  public hasGit(itemSrc: string) {
+    const url = `${itemSrc}/.git`; // 文件路径
+    try {
+      let isDirectory = fs.statSync(url).isDirectory(); // 判断是否为文件夹 返回布尔值
+      if (isDirectory) {
+        return true;
+      } else {
+        return false;
+      }
+    } catch (err) {
+      return false;
     }
   }
 }

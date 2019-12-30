@@ -28,7 +28,28 @@ body > .el-container {
   text-align: center;
 }
 
+.form-title2 {
+  width: 160px;
+  text-align: right;
+  font-weight: bold;
+  font-size: 24px;
+}
+
+.log_form_father{
+  width: 600px;
+}
+.el-divider__text, .el-link{
+  font-size: 20px;
+}
+
 .input_form{
   width: 200px;
+}
+
+.tip{
+  margin-left: 160px;
+  font-size: 17px;
+  display: flex;
+  align-items: center;
 }
 
