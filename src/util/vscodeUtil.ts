@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-25 17:13:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-30 21:10:57
+ * LastEditTime : 2019-12-31 16:36:12
  * FilePath     : /autoCommit/src/util/vscodeUtil.ts
  * Description  : vscode 相关的公共方法
  * https://github.com/OBKoro1
@@ -38,6 +38,11 @@ function outputLog(...arr: any) {
   webview.postMessage('console-log', arr);
 }
 
+// 是否生产环境
+function isProduction() {
+  return process.env.NODE_ENV === 'production' // production时 为打包安装版本 
+}
+
 // vscode 消息通知
 function showMessage(message: string, type = 'error') {
   const actions: any = {
@@ -56,6 +61,7 @@ function showMessage(message: string, type = 'error') {
 }
 
 export {
+  isProduction, // 是否生产环境
   outputLog, // 打印日志
   getPanelWebview, // 获取webview
   setPanelWebview, // 存储webview

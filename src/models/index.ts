@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-25 17:08:18
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-30 21:02:57
+ * LastEditTime : 2019-12-31 16:42:46
  * FilePath     : /autoCommit/src/models/index.ts
  * Description  : 插件逻辑入口
  * https://github.com/OBKoro1
@@ -10,7 +10,7 @@
 import * as vscode from 'vscode';
 import WebView from './WebView';
 import { webviewMsg } from '../util/dataStatement';
-import { setPanelWebview } from '../util/vscodeUtil';
+import { setPanelWebview, isProduction } from '../util/vscodeUtil';
 import CommitHandle from './commitHandle';
 import { outputLog } from '../util/vscodeUtil';
 import * as fs from 'fs';
@@ -20,6 +20,7 @@ class ExtensionLogic {
   public MessageCallBack: any;
   public autoCommitView: WebView;
   public CommitHandle: any;
+  public isDebug: boolean;
 
   public constructor(context: vscode.ExtensionContext) {
     this.context = context;
@@ -27,6 +28,7 @@ class ExtensionLogic {
       this.context,
       this.messageCallBack.bind(this)
     );
+    this.isDebug = true;
     setPanelWebview(this.autoCommitView);
     this.createView();
   }
@@ -37,6 +39,7 @@ class ExtensionLogic {
       fileName: 'autoCommit'
     };
     this.autoCommitView.create(option);
+    this.autoCommitView.postMessage('isProduction', isProduction());
   }
   // 处理webview的消息
   private messageCallBack(message: webviewMsg) {
@@ -52,10 +55,12 @@ class ExtensionLogic {
       canSelectFolders: true, // 是否可以选择文件夹
       canSelectMany: false // 是否可以选择多个文件
     });
+    if (!urlArr) return; // 用户取消选择
     const itemSrc = urlArr[0].path;
     if (this.hasGit(itemSrc)) {
       this.autoCommitView.postMessage('choose item success', itemSrc);
     } else {
+      this.autoCommitView.postMessage('choose item error', itemSrc);
       outputLog('项目地址错误', `${itemSrc}根目录没有.git文件夹`);
     }
   }

@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-30 20:21:13
+ * LastEditTime : 2019-12-31 18:00:43
  * FilePath     : /autoCommit/src/models/commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
@@ -37,6 +37,15 @@ class CommitHandle {
       detailTimeArr = detailTimeArr.filter(ele => {
         return !this.timeArr.includes(ele);
       });
+    //   TODO: commit number
+    //   if(){
+          
+    //   }
+    //   detailTimeArr.map(element=>{
+    //       return {
+    //           time: element
+    //       }
+    //   })
       this.timeArr.push(...detailTimeArr);
     });
     this.sortTime();

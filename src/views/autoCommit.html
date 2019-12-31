@@ -13,6 +13,7 @@
 <body>
   <div id="app">
     <div class="form-title">Github自动提交commit工具</div>
+    <div>{{ event }}</div>
     <el-container>
       <el-main>
         <el-form ref="form" :model="form" :rules="rules" label-width="160px">
@@ -116,6 +117,7 @@
         }
       }
       return {
+        isProduction: false,
         showText:{
           oldParams: '', // 保存的参数
           paramsStr: '', // commit参数
@@ -193,18 +195,39 @@
           data
         });
       },
+      logDebug(command,data){
+        this.showText.logArr.unshift(`command: ${command}`);
+        this.showText.logArr.unshift(`数据: ${data}`);
+        this.formatLog()
+      },
+      acceptLogFn(paramArr){
+        const logStr = paramArr.join(' ')
+        this.showText.logArr.unshift(logStr);
+        this.formatLog()
+      },
       // 注册
       initListener() {
-        // TODO: 通信问题 接收不到
-        window.addEventListener('message', event => {
+        window.onmessage = (e) =>{
           const { command, data } = event.data;
-          console.log('data',data)
-          console.log('event', event,command,data);
-          // console.log('登录成功 addEventListener', event);
-          // if (command === 'success') {
-          //   // 登录成功
-          // }
-        });
+          if (command === 'choose item success') {
+            // 选择文件夹成功
+            this.form.itemSrc = data
+          }else if(command === 'choose item error'){
+            this.$message({
+              type: 'error',
+              showClose: true,
+              message:  `${data}根目录没有.git文件夹`,
+              duration: 0
+            });
+          } else if(command === 'console-log'){
+            this.acceptLogFn(data)
+          }else if(command === 'isProduction'){
+            this.isProduction = data
+          }
+          if(!this.isProduction){
+            this.logDebug(command, data)
+          }
+        }
       },
       // 重置： commit成功和中断commit
       reset() {

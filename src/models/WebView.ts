@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-26 13:49:02
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-30 20:10:46
+ * LastEditTime : 2019-12-31 16:43:30
  * FilePath     : /autoCommit/src/models/WebView.ts
  * Description  : 创建webview
  * https://github.com/OBKoro1
@@ -11,7 +11,7 @@
 import * as vscode from 'vscode';
 import * as path from 'path';
 import * as fs from 'fs';
-import { showMessage } from '../util/vscodeUtil';
+import { showMessage, isProduction } from '../util/vscodeUtil';
 import { webviewMsg } from '../util/dataStatement';
 
 // webview 设置
@@ -35,8 +35,7 @@ class WebView {
     column: vscode.ViewColumn = vscode.ViewColumn.One
   ) {
     // 获取资源地址
-    // TODO: 打包
-    const srcPath = process.env.NODE_ENV !== 'production' ? 'src' : 'dist';
+    const srcPath = isProduction() ? 'out' : 'src';
     this.currentPanel = vscode.window.createWebviewPanel(
       WebviewPanelOption.type,
       WebviewPanelOption.title,
@@ -111,9 +110,9 @@ class WebView {
    * @param command
    * @param message
    */
-  public postMessage(command: string, data: object) {
-    if (!this.currentPanel) return
-    this.currentPanel.webview.postMessage({ command, data })
+  public postMessage(command: string, data: any) {
+    if (!this.currentPanel) return;
+    this.currentPanel.webview.postMessage({ command, data });
   }
 }
 
