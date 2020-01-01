@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2020-01-01 17:32:41
+ * LastEditTime : 2020-01-01 18:06:25
  * FilePath     : /autoCommit/src/models/commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
@@ -109,7 +109,7 @@ class CommitHandle {
         );
         const isDebug = true; // 手动更改调试模拟是否提交git
         if (!isProduction() && !isDebug) {
-            // TODO: 测试提交 以及接受log
+          // TODO: 测试提交 以及接受log
           const res = this.myExecSync(
             `cd ${this.paramsObj.itemSrc} && git add . && git commit -m 'autoCommit' --date='${time}' && git pull && git push origin master`
           );
@@ -140,7 +140,7 @@ class CommitHandle {
   }
   commitEnd(totalNum: number) {
     this.userCancel = false; // 重新打开终止开关
-    this.autoCommitView.postMessage('commit 完成', 'commit 完成')
+    this.autoCommitView.postMessage('commit 完成', 'commit 完成');
     outputLog('自动commit完成', `总commit次数${totalNum}`);
   }
   cancelCommit() {
@@ -152,9 +152,24 @@ class CommitHandle {
   public closeCommit() {
     this.userCancel = true;
   }
-  // 格式化日期
+  // 当天的随机时间
+  //   formatTime(time: string) {
+  //     const hour = `${RandomNumber(0, 1)}${RandomNumber(0, 9)}`;
+  //     const minute = `${RandomNumber(0, 5)}${RandomNumber(0, 9)}`;
+  //     return `${time} ${hour}:${minute}`;
+  //   }
+  // TODO: 某天的随机时间 代码块 
+  // 获取当天的随机时间
   formatTime(time: string) {
-    return `${time} 08:00`;
+    const hour1 = RandomNumber(0, 2);
+    let hour2 = RandomNumber(0, 9);
+    if (hour1 === 2) {
+      // 小时第一个数字为2 则小时第二个数字最多为4
+      hour2 = RandomNumber(0, 3);
+    }
+    const minute = `${RandomNumber(0, 5)}${RandomNumber(0, 9)}`;
+    const hour = `${hour1}${hour2}`;
+    return `${time} ${hour}:${minute}`;
   }
   // 获取两个日期之间的间隔: [ '2019-02-02', '2019-02-03' ... ]
   getAllDay(begin: string, end: string) {
