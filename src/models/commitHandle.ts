@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-31 18:00:43
+ * LastEditTime : 2020-01-01 17:32:41
  * FilePath     : /autoCommit/src/models/commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
@@ -13,99 +13,144 @@ import * as moment from 'moment';
 import * as fs from 'fs';
 import { execSync } from 'child_process';
 import { RandomNumber } from '../util/util';
-import { getPanelWebview, outputLog } from '../util/vscodeUtil';
+import { getPanelWebview, outputLog, isProduction } from '../util/vscodeUtil';
 import WebView from './WebView';
+
+interface timeElement {
+  value: Array<string>;
+  commitNumber: number;
+}
+
+interface dayTime {
+  value: string;
+  commitNumber: number;
+}
 
 class CommitHandle {
   public paramsObj: any;
-  public timeArr: Array<string>;
+  public timeArr: Array<dayTime>;
   public autoCommitView: WebView;
-
+  private userCancel: boolean;
   constructor(message: webviewMsg) {
     this.paramsObj = message.data;
     this.timeArr = [];
     this.timeHandle();
     this.autoCommitView = getPanelWebview();
+    this.userCancel = false;
   }
   // 处理所有时间段
   timeHandle() {
     // 处理所有时间范围
-    this.paramsObj.formatTime.forEach((item: Array<string>) => {
+    this.paramsObj.timeArr.forEach((item: timeElement) => {
       // 获取每个时间范围的具体日期
-      let detailTimeArr = this.getAllDay(item[0], item[1]);
-      // 日期去重
-      detailTimeArr = detailTimeArr.filter(ele => {
-        return !this.timeArr.includes(ele);
+      let detailTimeArr = this.getAllDay(item.value[0], item.value[1]);
+      // 日期去重 组织数据
+      detailTimeArr.forEach(ele => {
+        let index = this.timeArr.findIndex(element => {
+          return element.value === ele;
+        });
+        // 添加不存在的日期
+        if (index === -1) {
+          this.timeArr.push({
+            value: ele,
+            commitNumber: item.commitNumber
+          });
+        }
       });
-    //   TODO: commit number
-    //   if(){
-          
-    //   }
-    //   detailTimeArr.map(element=>{
-    //       return {
-    //           time: element
-    //       }
-    //   })
-      this.timeArr.push(...detailTimeArr);
     });
     this.sortTime();
   }
   // 日期排序
   sortTime() {
-    this.timeArr = this.timeArr.sort((item1: string, item2: string): number => {
-      const dateArr1: Array<any> = item1.split('-');
-      const dateArr2: Array<any> = item2.split('-');
-      if (dateArr1[0] === dateArr2[0]) {
-        if (dateArr1[1] === dateArr2[1]) {
-          // 日期不同就比较日期
-          return dateArr1[2] - dateArr2[2];
+    this.timeArr = this.timeArr.sort(
+      (item1: dayTime, item2: dayTime): number => {
+        const dateArr1: Array<any> = item1.value.split('-');
+        const dateArr2: Array<any> = item2.value.split('-');
+        if (dateArr1[0] === dateArr2[0]) {
+          if (dateArr1[1] === dateArr2[1]) {
+            // 日期不同就比较日期
+            return dateArr1[2] - dateArr2[2];
+          } else {
+            // 月份不同就比较月份
+            return dateArr1[1] - dateArr2[1];
+          }
         } else {
-          // 月份不同就比较月份
-          return dateArr1[1] - dateArr2[1];
+          //  年份不同就比较年份
+          return dateArr1[0] - dateArr2[0];
         }
-      } else {
-        //  年份不同就比较年份
-        return dateArr1[0] - dateArr2[0];
       }
-    });
+    );
     this.commitFn();
   }
-  // TODO: 中断
-  commitFn() {
-    outputLog('将要commit的日期:', this.timeArr);
-    outputLog('每个日期提交次数:', this.paramsObj.commitNumber);
+  async commitFn() {
+    outputLog('将要commit的日期:', JSON.stringify(this.timeArr));
     let totalNum = 0; // 总commit次数
     // 遍历日期
-    this.timeArr.forEach(item => {
+    for (let item of this.timeArr.values()) {
+      if (this.cancelCommit()) break;
       // 每个日期commit次数
-      for (let i = 0; i < this.paramsObj.commitNumber; i++) {
-        let time = this.formatTime(item); // 2019-01-02 08:00
+      let dayCommitNumber = this.paramsObj.commitNumber;
+      if (item.commitNumber !== 0) {
+        // 如果该范围有commit次数 则用该范围的
+        dayCommitNumber = item.commitNumber;
+      }
+      for (let i = 0; i < dayCommitNumber; i++) {
+        if (this.cancelCommit()) break;
+        let time = this.formatTime(item.value); // 2019-01-02 08:00
         time = moment(time).format(); // 2019-01-02T00:00:00+0800
-        const commitContent = `${time} \n 随机数:${RandomNumber(1, 100000)}`;
+        const commitContent = `${time} \n随机数:${RandomNumber(
+          1,
+          100000
+        )}\n提交次数:${totalNum + 1}`;
         fs.writeFileSync(
-          `${this.paramsObj.itemSrc}/${this.paramsObj.fileSrc}`,
+          `${this.paramsObj.itemSrc}/${this.paramsObj.fileName}`,
           commitContent,
           'utf-8'
         );
-        const res = this.myExecSync(
-          `cd ${this.paramsObj.itemSrc} && git add . && git commit -m 'autoCommit' --date='${time}' && git pull && git push origin master`
-        );
-        console.log('res 结束', res);
-        // 当前最新版本commit 信息
-        const cmd = `git log -1 \
-            --date=iso --pretty=format:'{"commit": "%h","author": "%aN <%aE>","date": "%ad","message": "%s"},' \
-            $@ | \
-            perl -pe 'BEGIN{print "["}; END{print "]\n"}' | \
-            perl -pe 's/},]/}]/'`;
-        // [{"commit": "a6b5f3d","author": "OBKoro1 <1677593011@qq.com>","date": "2019-12-26 21:05:57 +0800","message": "init"}]
-        const log = this.myExecSync(cmd);
-        console.log('log 开始', log);
+        const isDebug = true; // 手动更改调试模拟是否提交git
+        if (!isProduction() && !isDebug) {
+            // TODO: 测试提交 以及接受log
+          const res = this.myExecSync(
+            `cd ${this.paramsObj.itemSrc} && git add . && git commit -m 'autoCommit' --date='${time}' && git pull && git push origin master`
+          );
+          console.log('res 结束', res);
+          // 当前最新版本commit 信息
+          const cmd = `git log -1 \
+                  --date=iso --pretty=format:'{"commit": "%h","author": "%aN <%aE>","date": "%ad","message": "%s"},' \
+                  $@ | \
+                  perl -pe 'BEGIN{print "["}; END{print "]\n"}' | \
+                  perl -pe 's/},]/}]/'`;
+          // [{"commit": "a6b5f3d","author": "OBKoro1 <1677593011@qq.com>","date": "2019-12-26 21:05:57 +0800","message": "init"}]
+          const log = this.myExecSync(cmd);
+          console.log('log 开始', log);
+        } else {
+          // 模拟git提交
+          const test = await new Promise((resolve, reject) => {
+            setTimeout(() => {
+              outputLog('延迟一秒');
+              resolve('延迟一秒');
+            }, 1000);
+          });
+        }
         totalNum++;
         outputLog('commit内容', commitContent);
       }
-      outputLog(`总commit次数${totalNum}`);
-      outputLog('自动commit完成');
-    });
+    }
+    this.commitEnd(totalNum);
+  }
+  commitEnd(totalNum: number) {
+    this.userCancel = false; // 重新打开终止开关
+    this.autoCommitView.postMessage('commit 完成', 'commit 完成')
+    outputLog('自动commit完成', `总commit次数${totalNum}`);
+  }
+  cancelCommit() {
+    if (this.userCancel) {
+      outputLog('终止自动commit');
+    }
+    return this.userCancel;
+  }
+  public closeCommit() {
+    this.userCancel = true;
   }
   // 格式化日期
   formatTime(time: string) {

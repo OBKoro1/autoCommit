@@ -13,10 +13,9 @@
 <body>
   <div id="app">
     <div class="form-title">Github自动提交commit工具</div>
-    <div>{{ event }}</div>
     <el-container>
       <el-main>
-        <el-form ref="form" :model="form" :rules="rules" label-width="160px">
+        <el-form ref="form" :model="form" :rules="rules" label-width="180px">
           <el-form-item class="form_item" prop="itemSrc">
             <label slot="label">
               <el-tooltip class="item" content="要提交commit的仓库文件夹" placement="top-start">
@@ -46,52 +45,69 @@
           </el-form-item>
           <el-form-item class="form_item" prop="commitNumber">
             <label slot="label">
-              <el-tooltip class="item" content="时间范围内每个日期需要commit的次数" placement="top-start">
-                <span>commit次数 :</span>
+              <el-tooltip class="item" content="时间范围内默认每个日期需要commit的次数" placement="top-start">
+                <span>默认commit次数 :</span>
               </el-tooltip>
             </label>
-            <el-input-number v-model="form.commitNumber" :min="1" :max="100" size="mini"></el-input-number>
+            <el-input-number v-model="form.commitNumber" :step="1" :min="1" :max="100" size="large"></el-input-number>
           </el-form-item>
           <el-form-item v-for="(ele, index) in form.timeArr" :key="index" :prop="'timeArr.' + index + '.value'" :rules="{
                 required: true, message: '日期不能为空', trigger: 'blur'
               }">
             <label slot="label">
-              <!-- TODO: wiki：一个日期只能选中一次 去重 sort排序 切割字符串 单独比较 -->
-              <el-tooltip class="item" content="要commit的时间范围,可多选" placement="top-start">
+              <el-tooltip class="item" content="要commit的日期范围" placement="top-start">
                 <span>commit日期范围{{index+1}} :</span>
               </el-tooltip>
             </label>
-            <el-date-picker v-model="ele.value" size="middle" type="daterange" value-format="yyyy-MM-dd"
+            <el-date-picker v-model="ele.value"  type="daterange" value-format="yyyy-MM-dd"
               range-separator="至" start-placeholder="开始日期" end-placeholder="结束日期">
             </el-date-picker>
-            <el-button @click.prevent="removeTime(index)" :disabled="index === 0">删除</el-button>
+          </el-form-item>
+          <el-form-item v-for="(ele, index) in form.timeArr" :key="index">
+            <label slot="label">
+              <el-tooltip class="item" content="可选(默认使用默认commit次数)：对应index的日期范围每个日期的commit次数" placement="top-start">
+                <span>该范围每天提交次数{{index+1}} :</span>
+              </el-tooltip>
+            </label>
+            <el-input-number v-model="ele.commitNumber" :step="1" :min="0" :max="100" ></el-input-number>
+            <el-button @click.prevent="removeTime(index)"  :disabled="index === 0">删除</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('form')" :disabled="runNow !== 1 && runNow!== 0">开始commit</el-button>
-            <el-button @click="addTimeRange">新增时间范围</el-button>
-            <el-button @click="reset" :disabled="runNow === 1">取消commit</el-button>
-            <el-button @click="clearLog" :disabled="showText.logStr !== ''">清空日志</el-button>
+            <el-button type="primary" @click="submitForm('form')" :disabled="runNow === 1 && runNow !== 0">开始commit</el-button>
+            <el-button @click="addTimeRange" :disabled="runNow === 1">新增日期范围</el-button>
+            <el-button @click="reset" :disabled="runNow !== 1">取消commit</el-button>
+            <el-button @click="clearLog" :disabled="showText.logStr === ''">清空日志</el-button>
           </el-form-item>
         </el-form>
         <div class="form-title2">日志和文档</div>
         <el-main>
           <div class="log_form_father">
             <el-form label-width="160px">
-              <el-form-item label="插件运行日志 :">
+              <el-form-item>
+                <label slot="label">
+                  <el-tooltip content="通过日志了解插件运行信息" placement="top-start">
+                    <span>插件运行日志 :</span>
+                  </el-tooltip>
+                </label>
                 <el-input  @input="formatLog" type="textarea"
                 :autosize="{ minRows: 1, maxRows: 8}"
                 placeholder="无法输入 仅用于展示" v-model="showText.logStr" :disabled="runNow === 1 || runNow === 0">
               </el-form-item>
-              <el-form-item label="开始commit的参数 :">
+              <el-form-item>
+                <label slot="label">
+                  <el-tooltip content="点击开始commit,插件运行所需要的参数" placement="top-start">
+                    <span>程序参数 :</span>
+                  </el-tooltip>
+                </label>
                 <el-input  @input="watchParamsChange" type="textarea"
                 :autosize="{ minRows: 1, maxRows: 4}"
                 placeholder="无法输入 仅用于展示" v-model="showText.paramsStr" :disabled="showText.paramsStr === ''">
               </el-form-item>
-              <el-form-item label="wiki文档 :">
+              <el-form-item label="请先阅读文档 :">
                 <el-link href="https://element.eleme.io" type="primary"  target="_blank">Readme</el-link>
                 <el-link href="https://element.eleme.io" type="primary" target="_blank">更新日志</el-link>
               </el-form-item>
-              <div class="tip">觉得这个插件还不错的话, 请给我点个<el-link href="https://element.eleme.io" type="primary"  target="_blank">Star⭐️</el-link>吧~</div>
+              <div class="tip">觉得这个插件还不错的话, 请给我点个<el-link href="https://github.com/OBKoro1/autoCommit" type="primary"  target="_blank">Star⭐️</el-link>吧~</div>
           </div>
           </el-form>
           </el-input>
@@ -104,7 +120,13 @@
 <script src="../assets/scripts/vue.min.js"></script>
 <script src="../assets/scripts/element2.13.min.js"></script>
 <script>
-  const vscode = acquireVsCodeApi()
+  let isWeb = false // 是否网页 不在vscode插件生态内
+  let vscode;
+  try{
+    vscode =  acquireVsCodeApi()
+  }catch(err){
+    isWeb = true
+  }
   new Vue({
     el: '#app',
     data() {
@@ -117,7 +139,8 @@
         }
       }
       return {
-        isProduction: false,
+        isProduction: false, // 是否为调试模式
+        mockLogTime: null, // 模拟数据的定时器
         showText:{
           oldParams: '', // 保存的参数
           paramsStr: '', // commit参数
@@ -126,13 +149,15 @@
         },
         runNow: 0, // 0 初始化 1运行中 2运行结束 3取消运行
         form: {
+          // TODO: 保存其他几个参数
           // itemSrc: '/Users/koro/work/web_my/testCommit',
           itemSrc: '点击选择要commit的项目文件夹',
           fileName: 'commit.md',
           commitMsg: 'autoCommit',
           timeArr: [
             {
-              value: ''
+              value: '',
+              commitNumber: 0
             }
           ],
           commitNumber: 1,
@@ -167,6 +192,9 @@
     },
     mounted() {
       this.initListener();
+      if(isWeb){
+        this.form.itemSrc = '随便一个地址'
+      }
     },
     methods: {
       submitForm(formName) {
@@ -180,13 +208,15 @@
       },
       // 开始commit
       runCommit() {
-        let params = this.form
-        params.formatTime = this.mapTimeData()
         this.runNow = 1
-        this.showText.paramsStr = JSON.stringify(params)
+        this.clearLog()
+        this.showText.paramsStr = JSON.stringify(this.form)
         this.showText.oldParams = this.showText.paramsStr
-        // this.mockLog()
-        this.postMessage('commit', params);
+        if(isWeb){
+          this.mockLog()
+        }else{
+          this.postMessage('commit', this.form);
+        }
       },
       // 发送消息到插件
       postMessage(command, data) {
@@ -200,6 +230,7 @@
         this.showText.logArr.unshift(`数据: ${data}`);
         this.formatLog()
       },
+      // 接收日志
       acceptLogFn(paramArr){
         const logStr = paramArr.join(' ')
         this.showText.logArr.unshift(logStr);
@@ -219,9 +250,13 @@
               message:  `${data}根目录没有.git文件夹`,
               duration: 0
             });
+          } else if(command === 'commit 完成'){
+            // commit 完成
+            this.runNow = 2
           } else if(command === 'console-log'){
             this.acceptLogFn(data)
           }else if(command === 'isProduction'){
+            // 调试模式 查看通信
             this.isProduction = data
           }
           if(!this.isProduction){
@@ -231,12 +266,15 @@
       },
       // 重置： commit成功和中断commit
       reset() {
-        // TODO: runNow 3 取消运行
-        this.runNow = 2;
-        this.showText.paramsStr = ''
-        this.showText.oldParams = ''
+        this.runNow = 3;
+        if(isWeb){
+          clearInterval(this.mockLogTime)
+          this.mockLogTime = null
+        } else{
+          this.postMessage('cancel autoCommit')
+        }
       },
-      // 写html时用
+      // 模拟日志 写html时用
       mockLog(){
         this.showText.logArr = [
         'res 开始 undefined',
@@ -247,14 +285,13 @@
         '总commit次数1'
         ]
         let num = 0;
-       let timeId =  setInterval(() => {
+      this.mockLogTime =  setInterval(() => {
           if(num< 100){
             num++
             this.showText.logArr.unshift(`一些文字${num}`)
             this.formatLog()
           }else{
             this.reset()
-            clearInterval(timeId)
           }
         }, 1000);
       },
@@ -272,19 +309,14 @@
       removeTime(index) {
         this.form.timeArr.splice(index, 1)
       },
-      // format 一下时间 少嵌套一层
-      mapTimeData() {
-        return this.form.timeArr.map(item => {
-          return item.value
-        })
-      },
       chooseItem() {
           this.postMessage('choose-item')
       },
       // 增加时间范围选择
       addTimeRange() {
         this.form.timeArr.push({
-          value: ''
+          value: '',
+          commitNumber: 0
         });
       },
       fileNameChange(value) {
@@ -298,7 +330,7 @@
         }
       },
     }
-  }).$mount('#xpLogin');
+  });
 </script>
 
 </html>

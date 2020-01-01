@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-25 17:08:18
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-31 16:42:46
+ * LastEditTime : 2020-01-01 17:20:11
  * FilePath     : /autoCommit/src/models/index.ts
  * Description  : 插件逻辑入口
  * https://github.com/OBKoro1
@@ -20,7 +20,6 @@ class ExtensionLogic {
   public MessageCallBack: any;
   public autoCommitView: WebView;
   public CommitHandle: any;
-  public isDebug: boolean;
 
   public constructor(context: vscode.ExtensionContext) {
     this.context = context;
@@ -28,7 +27,6 @@ class ExtensionLogic {
       this.context,
       this.messageCallBack.bind(this)
     );
-    this.isDebug = true;
     setPanelWebview(this.autoCommitView);
     this.createView();
   }
@@ -47,8 +45,11 @@ class ExtensionLogic {
       this.CommitHandle = new CommitHandle(message);
     } else if (message.command === 'choose-item') {
       this.publishChooseFile();
+    } else if(message.command === 'cancel autoCommit'){
+      this.CommitHandle.closeCommit()
     }
   }
+  // 选择项目文件夹
   async publishChooseFile() {
     const urlArr: any = await vscode.window.showOpenDialog({
       canSelectFiles: false, // 允许选择文件
