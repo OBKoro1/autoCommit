@@ -2,8 +2,8 @@
   "name": "autoCommit",
   "displayName": "autoCommit",
   "description": "自动提交commit到github",
-  "publisher": "OBkoro1",
-  "version": "0.0.1",
+  "publisher": "OBKoro1",
+  "version": "1.0.0",
   "scripts": {
     "build": "vsce package",
     "vscode:prepublish": "webpack --mode production",
@@ -13,12 +13,24 @@
     "postinstall": "node ./node_modules/vscode/bin/install",
     "test": "yarn run compile && node ./node_modules/vscode/bin/test"
   },
-  "engines": {
-    "vscode": "^1.41.0"
+  "homepage": "https://github.com/OBKoro1/autoCommit",
+  "license": "SEE LICENSE IN LICENSE",
+  "author": {
+    "name": "OBKoro1",
+    "email": "obkoro1@foxmail.com",
+    "url": "http://obkoro1.com/web_accumulate/"
+  },
+  "galleryBanner": {
+    "color": "#3B4859",
+    "theme": "dark"
   },
   "repository": {
     "type": "git",
     "url": "https://github.com/OBKoro1/autoCommit"
+  },
+  "bugs": {
+    "url": "https://github.com/OBKoro1/koro1FileHeader/issues",
+    "email": "obkoro1@foxmail.com"
   },
   "categories": [
     "Other"
@@ -36,24 +48,27 @@
       }
     ]
   },
+  "engines": {
+    "vscode": "^1.41.0"
+  },
   "keywords": [
-    "vscode korofileheader",
-    "korofileheader",
-    "annotation",
-    "comment",
-    "vscode comment",
-    "vscode annotation",
-    "vscode 注释",
-    "vscode 文件头部注释",
-    "注释",
-    "文件注释",
-    "头部注释",
-    "函数注释",
-    "fileheader",
-    "vscode-fileheader",
-    "Document This",
+    "vscode autoCommit",
+    "autoCommit",
+    "auto commit",
+    "autocommit",
+    "自动commit",
+    "vscode 自动commit",
+    "vscode github",
+    "vscode commit",
+    "github commit",
+    "github autoCommit",
+    "git commit",
+    "git",
+    "github",
+    "commit",
+    "koro1",
     "obkoro1",
-    "koro1"
+    "github 自动commit"
   ],
   "devDependencies": {
     "@types/glob": "^7.1.1",
