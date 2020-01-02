@@ -1,8 +1,8 @@
 /*
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
- * @LastEditors  : OBKoro1
- * @LastEditTime : 2020-01-02 20:45:40
+ * LastEditors  : OBKoro1
+ * LastEditTime : 2020-01-02 22:14:59
  * FilePath     : /autoCommit/src/models/commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
@@ -115,7 +115,7 @@ class CommitHandle {
             // 异步执行命令 让出线程 打印日志 等
             commitMsg = await new Promise((resolve, reject) => {
               // TODO: git push 到当前分支
-              let cmd = `cd ${this.paramsObj.itemSrc} && git add . && git commit -m 'autoCommit' --date='${time}' && git pull && git push origin master`;
+              let cmd = `cd ${this.paramsObj.itemSrc} && git add . && git commit -m 'autoCommit' --date='${time}' && git pull && git push`;
               exec(cmd, (error, stdout, stderr) => {
                 if (error) {
                   outputLog(`执行命令出错:${cmd}`);
