@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-25 17:13:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-31 16:36:12
+ * LastEditTime : 2020-01-02 13:44:30
  * FilePath     : /autoCommit/src/util/vscodeUtil.ts
  * Description  : vscode 相关的公共方法
  * https://github.com/OBKoro1

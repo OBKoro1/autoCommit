@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2020-01-01 18:06:25
+ * LastEditTime : 2020-01-02 14:18:36
  * FilePath     : /autoCommit/src/models/commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
@@ -11,7 +11,7 @@
 import { webviewMsg } from '../util/dataStatement';
 import * as moment from 'moment';
 import * as fs from 'fs';
-import { execSync } from 'child_process';
+import { execSync, exec } from 'child_process';
 import { RandomNumber } from '../util/util';
 import { getPanelWebview, outputLog, isProduction } from '../util/vscodeUtil';
 import WebView from './WebView';
@@ -83,7 +83,7 @@ class CommitHandle {
     this.commitFn();
   }
   async commitFn() {
-    outputLog('将要commit的日期:', JSON.stringify(this.timeArr));
+    await outputLog('将要commit的日期:', JSON.stringify(this.timeArr));
     let totalNum = 0; // 总commit次数
     // 遍历日期
     for (let item of this.timeArr.values()) {
@@ -107,22 +107,26 @@ class CommitHandle {
           commitContent,
           'utf-8'
         );
-        const isDebug = true; // 手动更改调试模拟是否提交git
-        if (!isProduction() && !isDebug) {
-          // TODO: 测试提交 以及接受log
-          const res = this.myExecSync(
-            `cd ${this.paramsObj.itemSrc} && git add . && git commit -m 'autoCommit' --date='${time}' && git pull && git push origin master`
-          );
-          console.log('res 结束', res);
-          // 当前最新版本commit 信息
-          const cmd = `git log -1 \
-                  --date=iso --pretty=format:'{"commit": "%h","author": "%aN <%aE>","date": "%ad","message": "%s"},' \
-                  $@ | \
-                  perl -pe 'BEGIN{print "["}; END{print "]\n"}' | \
-                  perl -pe 's/},]/}]/'`;
-          // [{"commit": "a6b5f3d","author": "OBKoro1 <1677593011@qq.com>","date": "2019-12-26 21:05:57 +0800","message": "init"}]
-          const log = this.myExecSync(cmd);
-          console.log('log 开始', log);
+        let commitMsg: string = '';
+        const isDebug = false; // 手动更改调试模拟是否提交git
+        if (!isProduction() || !isDebug) {
+          try {
+            // 异步执行命令 让出线程 打印日志 等
+            commitMsg = await new Promise((resolve, reject) => {
+              let cmd = `cd ${this.paramsObj.itemSrc} && git add . && git commit -m 'autoCommit' --date='${time}' && git pull && git push origin master`;
+              exec(cmd, (error, stdout, stderr) => {
+                if (error) {
+                  outputLog(`执行命令出错:${cmd}`);
+                  outputLog(`错误信息:${error}`, stderr);
+                  reject(error);
+                  return;
+                }
+                resolve(stdout);
+              });
+            });
+          } catch (err) {
+              continue; // 错误 退出本次循环
+          }
         } else {
           // 模拟git提交
           const test = await new Promise((resolve, reject) => {
@@ -132,8 +136,9 @@ class CommitHandle {
             }, 1000);
           });
         }
+        await outputLog(`${totalNum + 1}commit内容`, commitContent);
+        await outputLog(`${totalNum + 1}commit信息`, commitMsg);
         totalNum++;
-        outputLog('commit内容', commitContent);
       }
     }
     this.commitEnd(totalNum);
@@ -152,19 +157,12 @@ class CommitHandle {
   public closeCommit() {
     this.userCancel = true;
   }
-  // 当天的随机时间
-  //   formatTime(time: string) {
-  //     const hour = `${RandomNumber(0, 1)}${RandomNumber(0, 9)}`;
-  //     const minute = `${RandomNumber(0, 5)}${RandomNumber(0, 9)}`;
-  //     return `${time} ${hour}:${minute}`;
-  //   }
-  // TODO: 某天的随机时间 代码块 
   // 获取当天的随机时间
   formatTime(time: string) {
     const hour1 = RandomNumber(0, 2);
     let hour2 = RandomNumber(0, 9);
     if (hour1 === 2) {
-      // 小时第一个数字为2 则小时第二个数字最多为4
+      // 小时第一个数字为2 则小时第二个数字最多为3
       hour2 = RandomNumber(0, 3);
     }
     const minute = `${RandomNumber(0, 5)}${RandomNumber(0, 9)}`;
@@ -198,14 +196,12 @@ class CommitHandle {
     }
     return timeArr;
   }
+  //  同步执行命令  
   myExecSync(cmd: string) {
     // 除了该方法直到子进程完全关闭后才返回 执行完毕 返回
     try {
       const res = execSync(cmd, {
         encoding: 'utf8',
-        timeout: 0,
-        maxBuffer: 200 * 1024,
-        killSignal: 'SIGTERM',
         cwd: undefined,
         env: undefined
       });

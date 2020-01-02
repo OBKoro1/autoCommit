@@ -70,7 +70,7 @@
               </el-tooltip>
             </label>
             <el-input-number v-model="ele.commitNumber" :step="1" :min="0" :max="100" ></el-input-number>
-            <el-button @click.prevent="removeTime(index)"  :disabled="index === 0">删除</el-button>
+            <el-button @click.prevent="removeTime(index)"  :disabled="form.timeArr.length === 1">删除</el-button>
           </el-form-item>
           <el-form-item>
             <el-button type="primary" @click="submitForm('form')" :disabled="runNow === 1 && runNow !== 0">开始commit</el-button>
@@ -109,9 +109,11 @@
                 <el-link href="https://element.eleme.io" type="primary" target="_blank">更新日志</el-link>
               </el-form-item>
               <div class="tip">觉得这个插件还不错的话, 请给我点个<el-link href="https://github.com/OBKoro1/autoCommit" type="primary"  target="_blank">Star⭐️</el-link>吧~</div>
+              <div v-if="!isProduction">
+                <div>{{ showText.logArr }}</div>
+              </div>
+            </el-form>
           </div>
-          </el-form>
-          </el-input>
         </el-main>
       </el-main>
     </el-container>
@@ -147,6 +149,8 @@
           paramsStr: '', // commit参数
           logArr: [], // 保存的日志
           logStr: '', // 
+          command: [],
+          data: []
         },
         runNow: 0, // 0 初始化 1运行中 2运行结束 3取消运行
         form: {
@@ -241,6 +245,8 @@
       initListener() {
         window.onmessage = (e) =>{
           const { command, data } = event.data;
+          this.showText.command.unshift(command)
+          this.showText.data.unshift(data)
           if (command === 'choose item success') {
             // 选择文件夹成功
             this.form.itemSrc = data
@@ -260,7 +266,7 @@
             // 调试模式 查看通信
             this.isProduction = data
           }
-          if(!this.isProduction){
+          if(!this.isProduction && false){
             this.logDebug(command, data)
           }
         }
