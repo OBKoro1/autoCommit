@@ -20,6 +20,7 @@
     "email": "obkoro1@foxmail.com",
     "url": "http://obkoro1.com/web_accumulate/"
   },
+  "icon": "images/icon.png",
   "galleryBanner": {
     "color": "#3B4859",
     "theme": "dark"
@@ -63,6 +64,9 @@
     "github commit",
     "github autoCommit",
     "git commit",
+    "自动提交",
+    "git 自动提交",
+    "github 自动提交",
     "git",
     "github",
     "commit",

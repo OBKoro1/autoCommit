@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2020-01-02 14:18:36
+ * LastEditTime : 2020-01-02 16:22:22
  * FilePath     : /autoCommit/src/models/commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
@@ -49,13 +49,14 @@ class CommitHandle {
         let index = this.timeArr.findIndex(element => {
           return element.value === ele;
         });
-        // 添加不存在的日期
-        if (index === -1) {
-          this.timeArr.push({
-            value: ele,
-            commitNumber: item.commitNumber
-          });
+        // 删除重复日期
+        if (index !== -1) {
+          this.timeArr.splice(index, 1);
         }
+        this.timeArr.push({
+          value: ele,
+          commitNumber: item.commitNumber
+        });
       });
     });
     this.sortTime();
@@ -125,7 +126,7 @@ class CommitHandle {
               });
             });
           } catch (err) {
-              continue; // 错误 退出本次循环
+            continue; // 错误 退出本次循环
           }
         } else {
           // 模拟git提交
@@ -196,7 +197,7 @@ class CommitHandle {
     }
     return timeArr;
   }
-  //  同步执行命令  
+  //  同步执行命令
   myExecSync(cmd: string) {
     // 除了该方法直到子进程完全关闭后才返回 执行完毕 返回
     try {
