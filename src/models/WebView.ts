@@ -1,8 +1,8 @@
 /*
  * Author       : OBKoro1
  * Date         : 2019-12-26 13:49:02
- * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-31 16:43:30
+ * @LastEditors  : OBKoro1
+ * @LastEditTime : 2020-01-02 21:31:10
  * FilePath     : /autoCommit/src/models/WebView.ts
  * Description  : 创建webview
  * https://github.com/OBKoro1

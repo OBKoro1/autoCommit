@@ -1,8 +1,8 @@
 /*
  * Author       : OBKoro1
  * Date         : 2019-12-25 17:08:18
- * LastEditors  : OBKoro1
- * LastEditTime : 2020-01-02 14:35:12
+ * @LastEditors  : OBKoro1
+ * @LastEditTime : 2020-01-02 21:49:13
  * FilePath     : /autoCommit/src/models/index.ts
  * Description  : 插件逻辑入口
  * https://github.com/OBKoro1
@@ -58,7 +58,12 @@ class ExtensionLogic {
       canSelectMany: false // 是否可以选择多个文件
     });
     if (!urlArr) return; // 用户取消选择
-    const itemSrc = urlArr[0].path;
+    let itemSrc = urlArr[0].path;
+    if(sep === `\\`){
+      // window 系統用不同的路径
+       itemSrc = urlArr[0].fsPath;
+    }
+
     if (this.hasGit(itemSrc)) {
       this.autoCommitView.postMessage('choose item success', itemSrc);
     } else {
