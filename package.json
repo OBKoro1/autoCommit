@@ -1,5 +1,5 @@
 {
-  "name": "auto-commit",
+  "name": "autoCommit",
   "displayName": "Auto Commit",
   "description": "自动提交commit到github",
   "publisher": "OBKoro1",
