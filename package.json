@@ -1,6 +1,6 @@
 {
-  "name": "autoCommit",
-  "displayName": "autoCommit",
+  "name": "auto-commit",
+  "displayName": "Auto Commit",
   "description": "自动提交commit到github",
   "publisher": "OBKoro1",
   "version": "1.0.0",
@@ -20,7 +20,7 @@
     "email": "obkoro1@foxmail.com",
     "url": "http://obkoro1.com/web_accumulate/"
   },
-  "icon": "images/icon3.png",
+  "icon": "images/icon.png",
   "galleryBanner": {
     "color": "#3B4859",
     "theme": "dark"
@@ -44,8 +44,8 @@
     "commands": [
       {
         "command": "extension.autoCommit",
-        "title": "Github自动提交 autoCommit",
-        "category": "Github自动提交 autoCommit"
+        "title": "控制Github绿色格子的commit数量",
+        "category": "auto commit Github自动提交 "
       }
     ]
   },
