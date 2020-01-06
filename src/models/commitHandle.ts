@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2020-01-04 11:14:22
+ * LastEditTime : 2020-01-04 15:14:39
  * FilePath     : /autoCommit/src/models/commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
@@ -114,7 +114,7 @@ class CommitHandle {
           try {
             // 异步执行命令 让出线程 打印日志 等
             commitMsg = await new Promise((resolve, reject) => {
-              let cmd = `cd ${this.paramsObj.itemSrc} && git add . && git commit -m '${this.paramsObj.commitMsg}' --date='${time}' && git pull && git push`;
+              let cmd = `cd ${this.paramsObj.itemSrc} && git add . && git commit -m '${this.paramsObj.commitMsg}' --date='${time}'`;
               exec(cmd, (error, stdout, stderr) => {
                 if (error) {
                   outputLog(`执行命令出错:${cmd}`);
@@ -142,6 +142,7 @@ class CommitHandle {
         totalNum++;
       }
     }
+    this.myExecSync(`cd ${this.paramsObj.itemSrc} && git pull && git push`)
     this.commitEnd(totalNum);
   }
   commitEnd(totalNum: number) {
