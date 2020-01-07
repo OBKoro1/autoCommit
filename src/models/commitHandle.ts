@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2020-01-04 15:14:39
+ * LastEditTime : 2020-01-07 22:30:03
  * FilePath     : /autoCommit/src/models/commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
@@ -91,6 +91,10 @@ class CommitHandle {
       if (this.cancelCommit()) break;
       // 每个日期commit次数
       let dayCommitNumber = this.paramsObj.commitNumber;
+      if (this.paramsObj.randomCommit) {
+        // 随机commit次数
+        dayCommitNumber = RandomNumber(1, this.paramsObj.commitNumber);
+      }
       if (item.commitNumber !== 0) {
         // 如果该范围有commit次数 则用该范围的
         dayCommitNumber = item.commitNumber;
@@ -137,12 +141,43 @@ class CommitHandle {
             }, 1000);
           });
         }
-        await outputLog(`${totalNum + 1}commit内容`, commitContent);
-        await outputLog(`${totalNum + 1}commit信息`, commitMsg);
+        outputLog(`${totalNum + 1}commit内容`, commitContent);
+        outputLog(`${totalNum + 1}commit信息`, commitMsg);
         totalNum++;
       }
     }
-    this.myExecSync(`cd ${this.paramsObj.itemSrc} && git pull && git push`)
+    if (this.cancelCommit()) {
+      if (totalNum < 1) return;
+      outputLog('回滚中...');
+      const res = await new Promise((resolve, reject) => {
+        let cmd = `cd ${this.paramsObj.itemSrc} && git reset --hard HEAD~${totalNum}`;
+        exec(cmd, (error, stdout, stderr) => {
+          if (error) {
+            outputLog(`执行命令出错:${cmd}`);
+            outputLog(`回滚失败:${error}`, stderr);
+            reject(error);
+            return;
+          }
+          outputLog('回滚成功:', stdout);
+          resolve(stdout);
+        });
+      });
+    } else {
+      outputLog('提交中...');
+      const res = await new Promise((resolve, reject) => {
+        let cmd = `cd ${this.paramsObj.itemSrc} && git pull && git push`;
+        exec(cmd, (error, stdout, stderr) => {
+          if (error) {
+            outputLog(`执行命令出错:${cmd}`);
+            outputLog(`错误信息:${error}`, stderr);
+            reject(error);
+            return;
+          }
+          resolve(stdout);
+        });
+      });
+      outputLog('提交信息:', res);
+    }
     this.commitEnd(totalNum);
   }
   commitEnd(totalNum: number) {

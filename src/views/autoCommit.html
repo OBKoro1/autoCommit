@@ -45,11 +45,32 @@
           </el-form-item>
           <el-form-item class="form_item" prop="commitNumber">
             <label slot="label">
+              <el-tooltip class="item" content="时间范围内默认每个日期是否随机commit" placement="top-start">
+                <span>是否随机commit :</span>
+              </el-tooltip>
+            </label>
+            <el-switch
+              @change="switchChange"
+              v-model="form.randomCommit"
+              active-color="#13ce66"
+              inactive-color="#ff4949">
+            </el-switch>
+          </el-form-item>
+          <el-form-item class="form_item" prop="commitNumber" v-if="form.randomCommit">
+            <label slot="label">
+              <el-tooltip class="item" :content="`时间范围内默认每个日期随机commit 1次~${form.commitNumber}次`" placement="top-start">
+                <span>随机commit次数 :</span>
+              </el-tooltip>
+            </label>
+            <el-input-number v-model="form.commitNumber" :step="1" :min="2" :max="20" size="large"></el-input-number>
+          </el-form-item>
+          <el-form-item class="form_item" prop="commitNumber" v-else>
+            <label slot="label">
               <el-tooltip class="item" content="时间范围内默认每个日期需要commit的次数" placement="top-start">
                 <span>默认commit次数 :</span>
               </el-tooltip>
             </label>
-            <el-input-number v-model="form.commitNumber" :step="1" :min="1" :max="100" size="large"></el-input-number>
+            <el-input-number v-model="form.commitNumber" :step="1" :min="1" :max="20" size="large"></el-input-number>
           </el-form-item>
           <el-form-item v-for="(ele, index) in form.timeArr" :key="index" :prop="'timeArr.' + index + '.value'" :rules="{
                 required: true, message: '日期不能为空', trigger: 'blur'
@@ -69,7 +90,7 @@
                 <span>该范围每天提交次数{{index+1}} :</span>
               </el-tooltip>
             </label>
-            <el-input-number v-model="ele.commitNumber" :step="1" :min="0" :max="100" ></el-input-number>
+            <el-input-number v-model="ele.commitNumber" :step="1" :min="0" :max="30" ></el-input-number>
             <el-button @click.prevent="removeTime(index)"  :disabled="form.timeArr.length === 1">删除</el-button>
           </el-form-item>
           <el-form-item>
@@ -156,6 +177,7 @@
         form: {
           // TODO: 保存其他几个参数
           // itemSrc: '/Users/koro/work/web_my/testCommit',
+          randomCommit: true,
           itemSrc: '点击选择要commit的项目文件夹',
           fileName: 'commit.md',
           commitMsg: 'autoCommit',
@@ -165,7 +187,7 @@
               commitNumber: 0
             }
           ],
-          commitNumber: 1,
+          commitNumber: 10,
         },
         rules: {
           'itemSrc': [
@@ -325,6 +347,13 @@
           value: '',
           commitNumber: 0
         });
+      },
+      switchChange(value){
+        if(value){
+          this.form.commitNumber = 10;
+        }else{
+          this.form.commitNumber = 1;
+        }
       },
       fileNameChange(value) {
         if (value === '') {

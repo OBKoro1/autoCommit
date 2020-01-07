@@ -6,6 +6,12 @@
 <!-- TODO: npm包形式 -->
 <!-- webview 的icon -->
 
+<!-- TODO: 支持谷歌插件 -->
+<!-- TODO: html的链接 -->
+
+<!-- TODO: commit的颜色 -->
+
+
 ### [V1.0.0]
 
 - Initial release
