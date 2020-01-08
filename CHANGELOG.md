@@ -14,4 +14,4 @@
 
 ### [V1.0.0]
 
-- Initial release
+插件开源

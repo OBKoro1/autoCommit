@@ -2,14 +2,14 @@
  * Author       : OBKoro1
  * Date         : 2019-12-25 17:13:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2020-01-02 13:44:30
+ * LastEditTime : 2020-01-08 09:59:48
  * FilePath     : /autoCommit/src/util/vscodeUtil.ts
  * Description  : vscode 相关的公共方法
  * https://github.com/OBKoro1
  */
 import * as vscode from 'vscode';
 
-let extensionContext = '';
+let extensionContext: vscode.ExtensionContext;
 let webview: any;
 
 // 存储插件上下午文
@@ -18,7 +18,7 @@ function setExtensionContext(context: any) {
 }
 
 // 获取插件上下文
-function getExtensionContext() {
+function getExtensionContext(): vscode.ExtensionContext {
   return extensionContext;
 }
 
@@ -40,7 +40,7 @@ function outputLog(...arr: any) {
 
 // 是否生产环境
 function isProduction() {
-  return process.env.NODE_ENV === 'production' // production时 为打包安装版本 
+  return process.env.NODE_ENV === 'production'; // production时 为打包安装版本
 }
 
 // vscode 消息通知

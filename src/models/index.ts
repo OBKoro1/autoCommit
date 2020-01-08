@@ -1,8 +1,8 @@
 /*
  * Author       : OBKoro1
  * Date         : 2019-12-25 17:08:18
- * @LastEditors  : OBKoro1
- * @LastEditTime : 2020-01-02 21:49:13
+ * LastEditors  : OBKoro1
+ * LastEditTime : 2020-01-08 10:04:53
  * FilePath     : /autoCommit/src/models/index.ts
  * Description  : 插件逻辑入口
  * https://github.com/OBKoro1
@@ -39,6 +39,9 @@ class ExtensionLogic {
     };
     this.autoCommitView.create(option);
     this.autoCommitView.postMessage('isProduction', isProduction());
+    const formData = this.context.globalState.get('commit-params')
+    this.autoCommitView.postMessage('init-formData', formData)
+
   }
   // 处理webview的消息
   private messageCallBack(message: webviewMsg) {

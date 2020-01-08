@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2020-01-07 22:30:03
+ * LastEditTime : 2020-01-08 10:48:40
  * FilePath     : /autoCommit/src/models/commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
@@ -13,7 +13,12 @@ import * as moment from 'moment';
 import * as fs from 'fs';
 import { execSync, exec } from 'child_process';
 import { RandomNumber } from '../util/util';
-import { getPanelWebview, outputLog, isProduction } from '../util/vscodeUtil';
+import {
+  getPanelWebview,
+  outputLog,
+  isProduction,
+  getExtensionContext
+} from '../util/vscodeUtil';
 import WebView from './WebView';
 
 interface timeElement {
@@ -149,7 +154,7 @@ class CommitHandle {
     if (this.cancelCommit()) {
       if (totalNum < 1) return;
       outputLog('回滚中...');
-      const res = await new Promise((resolve, reject) => {
+      await new Promise((resolve, reject) => {
         let cmd = `cd ${this.paramsObj.itemSrc} && git reset --hard HEAD~${totalNum}`;
         exec(cmd, (error, stdout, stderr) => {
           if (error) {
@@ -164,6 +169,7 @@ class CommitHandle {
       });
     } else {
       outputLog('提交中...');
+      this.autoCommitView.postMessage('提交中...', '提交中');
       const res = await new Promise((resolve, reject) => {
         let cmd = `cd ${this.paramsObj.itemSrc} && git pull && git push`;
         exec(cmd, (error, stdout, stderr) => {
@@ -182,8 +188,10 @@ class CommitHandle {
   }
   commitEnd(totalNum: number) {
     this.userCancel = false; // 重新打开终止开关
-    this.autoCommitView.postMessage('commit 完成', 'commit 完成');
+    this.autoCommitView.postMessage('commit 完成', this.paramsObj);
+    getExtensionContext().globalState.update('commit-params', this.paramsObj);
     outputLog('自动commit完成', `总commit次数${totalNum}`);
+    outputLog('保存参数信息');
   }
   cancelCommit() {
     if (this.userCancel) {

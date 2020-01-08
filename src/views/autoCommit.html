@@ -131,7 +131,7 @@
               </el-form-item>
               <div class="tip">觉得这个插件还不错的话, 请给我点个<el-link href="https://github.com/OBKoro1/autoCommit" type="primary"  target="_blank">Star⭐️</el-link>吧~</div>
               <div v-if="!isProduction">
-                <div>{{ showText.logArr }}</div>
+                <div>{{ form }}</div>
               </div>
             </el-form>
           </div>
@@ -173,9 +173,8 @@
           command: [],
           data: []
         },
-        runNow: 0, // 0 初始化 1运行中 2运行结束 3取消运行
+        runNow: 0, // 0 初始化 1运行中 2运行结束 3取消运行 4push中
         form: {
-          // TODO: 保存其他几个参数
           // itemSrc: '/Users/koro/work/web_my/testCommit',
           randomCommit: true,
           itemSrc: '点击选择要commit的项目文件夹',
@@ -269,7 +268,17 @@
           const { command, data } = event.data;
           this.showText.command.unshift(command)
           this.showText.data.unshift(data)
-          if (command === 'choose item success') {
+          if(command === 'init-formData'){
+            if (data) {
+                this.form = data
+                // this.form.timeArr = [
+                //   {
+                //     value: '',
+                //     commitNumber: 0
+                //   }
+                // ]
+              }
+          } else if (command === 'choose item success') {
             // 选择文件夹成功
             this.form.itemSrc = data
           }else if(command === 'choose item error'){
@@ -279,7 +288,9 @@
               message:  `${data}根目录没有.git文件夹`,
               duration: 0
             });
-          } else if(command === 'commit 完成'){
+          } else if(command === ''){
+            
+          }else if(command === 'commit 完成'){
             // commit 完成
             this.runNow = 2
           } else if(command === 'console-log'){
