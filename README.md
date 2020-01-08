@@ -20,6 +20,10 @@
 
 ![](https://github.com/OBKoro1/autoCommit/blob/master/images/autoCommit.gif?raw=true)
 
+### 安装
+
+在 Vscode 扩展商店中搜索`Auto Commit`,点击安装即可。
+
 ### 插件入口
 
 1. 使用快捷键打开VSCode的命令面板。
@@ -29,7 +33,6 @@
     * 实际上可以输入下方选项的任何一段文字，都可以匹配到插件命令选项。
 
 ![](https://github.com/OBKoro1/autoCommit/blob/master/images/command.png?raw=true)
-
 
 ### 阅读使用文档
 
