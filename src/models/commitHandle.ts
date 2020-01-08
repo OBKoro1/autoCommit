@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2020-01-08 16:52:47
+ * LastEditTime : 2020-01-08 17:17:02
  * FilePath     : /autoCommit/src/models/commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
@@ -98,7 +98,8 @@ class CommitHandle {
       let dayCommitNumber = this.getDayCommitNumber(item);
       for (let i = 0; i < dayCommitNumber; i++) {
         if (this.cancelCommit()) break;
-        let commitContent = this.commitFileContent(item, totalNum);
+        let time = this.formatTime(item.value); // 2019-01-02 08:00
+        let commitContent = this.commitFileContent(time, totalNum);
         let commitMsg: string = '';
         const isDebug = false; // 手动更改调试模拟是否提交git
         if (!isProduction() || !isDebug) {
@@ -206,8 +207,7 @@ class CommitHandle {
     this.userCancel = true;
   }
   // 组织commit文件的内容
-  commitFileContent(item: dayTime, totalNum: number) {
-    let time = this.formatTime(item.value); // 2019-01-02 08:00
+  commitFileContent(time: string, totalNum: number) {
     time = moment(time).format(); // 2019-01-02T00:00:00+0800
     const commitContent = `${time}\n随机数:${RandomNumber(
       1,
