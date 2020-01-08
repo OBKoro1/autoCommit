@@ -62,7 +62,7 @@
                 <span>随机commit次数 :</span>
               </el-tooltip>
             </label>
-            <el-input-number v-model="form.commitNumber" :step="1" :min="2" :max="20" size="large"></el-input-number>
+            <el-input-number v-model="form.commitNumber" :step="1" :min="2" :max="30" size="large"></el-input-number>
           </el-form-item>
           <el-form-item class="form_item" prop="commitNumber" v-else>
             <label slot="label">
@@ -70,7 +70,7 @@
                 <span>默认commit次数 :</span>
               </el-tooltip>
             </label>
-            <el-input-number v-model="form.commitNumber" :step="1" :min="1" :max="20" size="large"></el-input-number>
+            <el-input-number v-model="form.commitNumber" :step="1" :min="1" :max="0" size="large"></el-input-number>
           </el-form-item>
           <el-form-item v-for="(ele, index) in form.timeArr" :key="index" :prop="'timeArr.' + index + '.value'" :rules="{
                 required: true, message: '日期不能为空', trigger: 'blur'
@@ -94,9 +94,9 @@
             <el-button @click.prevent="removeTime(index)"  :disabled="form.timeArr.length === 1">删除</el-button>
           </el-form-item>
           <el-form-item>
-            <el-button type="primary" @click="submitForm('form')" :disabled="runNow === 1 && runNow !== 0">开始commit</el-button>
-            <el-button @click="addTimeRange" :disabled="runNow === 1">新增日期范围</el-button>
-            <el-button @click="reset" :disabled="runNow !== 1">取消commit</el-button>
+            <el-button type="primary" @click="submitForm('form')" :disabled="(runNow === 4 || runNow === 1) && runNow !== 0">开始commit</el-button>
+            <el-button @click="addTimeRange" :disabled="runNow === 1 || runNow === 4">新增日期范围</el-button>
+            <el-button @click="reset" :disabled="runNow !== 1 || runNow !== 4">取消commit</el-button>
             <el-button @click="clearLog" :disabled="showText.logStr === ''">清空日志</el-button>
           </el-form-item>
         </el-form>
@@ -124,10 +124,10 @@
                 :autosize="{ minRows: 1, maxRows: 4}"
                 placeholder="无法输入 仅用于展示" v-model="showText.paramsStr" :disabled="showText.paramsStr === ''">
               </el-form-item>
-              <!-- TODO: 链接 -->
               <el-form-item label="请先阅读文档 :">
-                <el-link href="https://element.eleme.io" type="primary"  target="_blank">Readme</el-link>
-                <el-link href="https://element.eleme.io" type="primary" target="_blank">更新日志</el-link>
+                <el-link href="https://github.com/OBKoro1/autoCommit/wiki" type="primary"  target="_blank">Readme</el-link>
+                <el-link href="https://github.com/OBKoro1/autoCommit/wiki/%E4%BD%BF%E7%94%A8%E9%A1%BB%E7%9F%A5" type="primary"  target="_blank">使用文档</el-link>
+                <el-link href="https://github.com/OBKoro1/autoCommit/wiki/ChangeLog" type="primary" target="_blank">更新日志</el-link>
               </el-form-item>
               <div class="tip">觉得这个插件还不错的话, 请给我点个<el-link href="https://github.com/OBKoro1/autoCommit" type="primary"  target="_blank">Star⭐️</el-link>吧~</div>
               <div v-if="!isProduction">
@@ -271,12 +271,6 @@
           if(command === 'init-formData'){
             if (data) {
                 this.form = data
-                // this.form.timeArr = [
-                //   {
-                //     value: '',
-                //     commitNumber: 0
-                //   }
-                // ]
               }
           } else if (command === 'choose item success') {
             // 选择文件夹成功
@@ -288,8 +282,10 @@
               message:  `${data}根目录没有.git文件夹`,
               duration: 0
             });
-          } else if(command === ''){
-            
+          } else if(command === '回滚'){
+            this.runNow = 3;
+          }else if(command === '提交中...'){
+            this.runNow = 4
           }else if(command === 'commit 完成'){
             // commit 完成
             this.runNow = 2
@@ -306,7 +302,6 @@
       },
       // 重置： commit成功和中断commit
       reset() {
-        this.runNow = 3;
         if(isWeb){
           clearInterval(this.mockLogTime)
           this.mockLogTime = null

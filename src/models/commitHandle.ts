@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2020-01-08 14:28:37
+ * LastEditTime : 2020-01-08 16:52:47
  * FilePath     : /autoCommit/src/models/commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
@@ -95,28 +95,10 @@ class CommitHandle {
     for (let item of this.timeArr.values()) {
       if (this.cancelCommit()) break;
       // 每个日期commit次数
-      let dayCommitNumber = this.paramsObj.commitNumber;
-      if (this.paramsObj.randomCommit) {
-        // 随机commit次数
-        dayCommitNumber = RandomNumber(1, this.paramsObj.commitNumber);
-      }
-      if (item.commitNumber !== 0) {
-        // 如果该范围有commit次数 则用该范围的
-        dayCommitNumber = item.commitNumber;
-      }
+      let dayCommitNumber = this.getDayCommitNumber(item);
       for (let i = 0; i < dayCommitNumber; i++) {
         if (this.cancelCommit()) break;
-        let time = this.formatTime(item.value); // 2019-01-02 08:00
-        time = moment(time).format(); // 2019-01-02T00:00:00+0800
-        const commitContent = `${time} \n随机数:${RandomNumber(
-          1,
-          100000
-        )}\n提交次数:${totalNum + 1}`;
-        fs.writeFileSync(
-          `${this.paramsObj.itemSrc}/${this.paramsObj.fileName}`,
-          commitContent,
-          'utf-8'
-        );
+        let commitContent = this.commitFileContent(item, totalNum);
         let commitMsg: string = '';
         const isDebug = false; // 手动更改调试模拟是否提交git
         if (!isProduction() || !isDebug) {
@@ -167,20 +149,7 @@ class CommitHandle {
     }
     if (this.cancelCommit()) {
       if (totalNum === 0) return;
-      outputLog('回滚中...');
-      await new Promise((resolve, reject) => {
-        let cmd = `cd ${this.paramsObj.itemSrc} && git reset --hard HEAD~${totalNum}`;
-        exec(cmd, (error, stdout, stderr) => {
-          if (error) {
-            outputLog(`执行命令出错:${cmd}`);
-            outputLog(`回滚失败:${error}`, stderr);
-            reject(error);
-            return;
-          }
-          outputLog('回滚成功:', stdout);
-          resolve(stdout);
-        });
-      });
+      await this.resetCommit(totalNum);
     } else {
       outputLog('提交中...');
       this.autoCommitView.postMessage('提交中...', '提交中');
@@ -190,6 +159,9 @@ class CommitHandle {
           if (error) {
             outputLog(`执行命令出错:${cmd}`);
             outputLog(`错误信息:${error}`, stderr);
+            outputLog(
+              `git push失败很可能是你的网络有问题，请换到一个网络状况比较良好的地方，然后再项目下执行 git push操作。`
+            );
             reject(error);
             return;
           }
@@ -199,6 +171,23 @@ class CommitHandle {
       outputLog('提交信息:', res);
     }
     this.commitEnd(totalNum);
+  }
+  async resetCommit(totalNum: number) {
+    this.autoCommitView.postMessage('回滚', '回滚');
+    outputLog('回滚中...');
+    return await new Promise((resolve, reject) => {
+      let cmd = `cd ${this.paramsObj.itemSrc} && git reset --hard HEAD~${totalNum}`;
+      exec(cmd, (error, stdout, stderr) => {
+        if (error) {
+          outputLog(`执行命令出错:${cmd}`);
+          outputLog(`回滚失败:${error}`, stderr);
+          reject(error);
+          return;
+        }
+        outputLog(`回滚${totalNum}次commit成功:`, stdout);
+        resolve(stdout);
+      });
+    });
   }
   commitEnd(totalNum: number) {
     this.userCancel = false; // 重新打开终止开关
@@ -215,6 +204,34 @@ class CommitHandle {
   }
   public closeCommit() {
     this.userCancel = true;
+  }
+  // 组织commit文件的内容
+  commitFileContent(item: dayTime, totalNum: number) {
+    let time = this.formatTime(item.value); // 2019-01-02 08:00
+    time = moment(time).format(); // 2019-01-02T00:00:00+0800
+    const commitContent = `${time}\n随机数:${RandomNumber(
+      1,
+      100000
+    )}\n提交次数:${totalNum + 1}`;
+    // 写入内容
+    fs.writeFileSync(
+      `${this.paramsObj.itemSrc}/${this.paramsObj.fileName}`,
+      commitContent,
+      'utf-8'
+    );
+    return commitContent
+  }
+  getDayCommitNumber(item: dayTime) {
+    let dayCommitNumber = this.paramsObj.commitNumber;
+    if (this.paramsObj.randomCommit) {
+      // 随机commit次数
+      dayCommitNumber = RandomNumber(1, this.paramsObj.commitNumber);
+    }
+    if (item.commitNumber !== 0) {
+      // 如果该范围有commit次数 则用该范围的
+      dayCommitNumber = item.commitNumber;
+    }
+    return dayCommitNumber;
   }
   // 获取当天的随机时间
   formatTime(time: string) {
