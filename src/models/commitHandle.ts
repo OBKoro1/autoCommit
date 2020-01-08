@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2020-01-08 10:48:40
+ * LastEditTime : 2020-01-08 14:28:37
  * FilePath     : /autoCommit/src/models/commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
@@ -151,8 +151,22 @@ class CommitHandle {
         totalNum++;
       }
     }
+    this.pushCommitFn(totalNum);
+  }
+  async pushCommitFn(totalNum: number) {
+    const commitNumberBig = 100; // commit数量过大
+    if (totalNum > commitNumberBig) {
+      outputLog(`commit数量:${totalNum}`);
+      outputLog('commit数量超过100次,请考虑10秒钟是否需要取消commit');
+      await new Promise((resolve, reject) => {
+        const thinkNumber = 10000; // 考虑时间 避免运行过快导致误操作
+        setTimeout(() => {
+          resolve();
+        }, thinkNumber);
+      });
+    }
     if (this.cancelCommit()) {
-      if (totalNum < 1) return;
+      if (totalNum === 0) return;
       outputLog('回滚中...');
       await new Promise((resolve, reject) => {
         let cmd = `cd ${this.paramsObj.itemSrc} && git reset --hard HEAD~${totalNum}`;
