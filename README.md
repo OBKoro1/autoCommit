@@ -38,6 +38,13 @@
 
 了解具体的使用方法，git相关内容，插件运行机制，请阅读[使用须知](https://github.com/OBKoro1/autoCommit/wiki/%E4%BD%BF%E7%94%A8%E9%A1%BB%E7%9F%A5)
 
+### 头部注释插件
+
+本人还开源了另外一个VSCode插件: [koroFileHeader](https://github.com/OBKoro1/koro1FileHeader)，目前该插件已经有1000+ Star了，欢迎安装使用。
+
+1. 它是用于生成文件头部注释，帮助我们养成良好习惯，规范团队代码风格。
+2. 插件支持所有主流语言,功能强大，灵活方便，文档齐全，食用简单！
+
 ### License
 
 [MIT](http://opensource.org/licenses/MIT)
