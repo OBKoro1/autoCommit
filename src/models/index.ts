@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-25 17:08:18
  * LastEditors  : OBKoro1
- * LastEditTime : 2020-01-08 10:04:53
+ * LastEditTime : 2020-01-09 21:47:12
  * FilePath     : /autoCommit/src/models/index.ts
  * Description  : 插件逻辑入口
  * https://github.com/OBKoro1
@@ -34,7 +34,7 @@ class ExtensionLogic {
   createView() {
     const option = {
       type: 'autoCommit',
-      title: 'Github自动提交commit工具',
+      title: 'autoCommit',
       fileName: 'autoCommit'
     };
     this.autoCommitView.create(option);
