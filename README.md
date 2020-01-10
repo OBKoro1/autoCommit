@@ -16,7 +16,15 @@
 
 ### 使用效果
 
+1. 使用本插件来控制commit次数.
+2.  如下图，你甚至规划一下`commit`次数，然后画出图形, 天空才是你的极限。
+
+![commit_img.png](https://ask.qcloudimg.com/draft/2195437/htbghw5joa.png)
+
+#### 自动commit演示：
+
 ![autoCommit演示](https://ask.qcloudimg.com/draft/2195437/lig5kh97xk.gif)
+
 ### 安装
 
 在 Vscode 扩展商店中搜索`Auto Commit`,点击安装即可。
