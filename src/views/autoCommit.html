@@ -96,7 +96,7 @@
           <el-form-item>
             <el-button type="primary" @click="submitForm('form')" :disabled="(runNow === 4 || runNow === 1) && runNow !== 0">开始commit</el-button>
             <el-button @click="addTimeRange" :disabled="runNow === 1 || runNow === 4">新增日期范围</el-button>
-            <el-button @click="reset" :disabled="runNow !== 1 || runNow !== 4">取消commit</el-button>
+            <el-button @click="reset" :disabled="runNow !== 1 && runNow !== 4">取消commit</el-button>
             <el-button @click="clearLog" :disabled="showText.logStr === ''">清空日志</el-button>
           </el-form-item>
         </el-form>
@@ -293,9 +293,9 @@
             this.acceptLogFn(data)
           }else if(command === 'isProduction'){
             // 调试模式 查看通信
-            this.isProduction = data
+            this.isProduction = true
           }
-          if(!this.isProduction && false){
+          if(!this.isProduction){
             this.logDebug(command, data)
           }
         }
