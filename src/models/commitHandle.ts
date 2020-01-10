@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2020-01-08 17:17:02
+ * LastEditTime : 2020-01-09 22:03:40
  * FilePath     : /autoCommit/src/models/commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
@@ -138,19 +138,22 @@ class CommitHandle {
   }
   async pushCommitFn(totalNum: number) {
     const commitNumberBig = 100; // commit数量过大
+    let thinkNumber = 10000; // 考虑时间 避免运行过快导致误操作
     if (totalNum > commitNumberBig) {
       outputLog(`commit数量:${totalNum}`);
       outputLog('commit数量超过100次,请考虑10秒钟是否需要取消commit');
-      await new Promise((resolve, reject) => {
-        const thinkNumber = 10000; // 考虑时间 避免运行过快导致误操作
-        setTimeout(() => {
-          resolve();
-        }, thinkNumber);
-      });
+    } else {
+      thinkNumber = 2000; // 无感 考虑两秒
     }
+    await new Promise((resolve, reject) => {
+      setTimeout(() => {
+        resolve();
+      }, thinkNumber);
+    });
     if (this.cancelCommit()) {
       if (totalNum === 0) return;
       await this.resetCommit(totalNum);
+      this.commitEnd(totalNum, true);
     } else {
       outputLog('提交中...');
       this.autoCommitView.postMessage('提交中...', '提交中');
@@ -170,8 +173,8 @@ class CommitHandle {
         });
       });
       outputLog('提交信息:', res);
+      this.commitEnd(totalNum);
     }
-    this.commitEnd(totalNum);
   }
   async resetCommit(totalNum: number) {
     this.autoCommitView.postMessage('回滚', '回滚');
@@ -190,11 +193,13 @@ class CommitHandle {
       });
     });
   }
-  commitEnd(totalNum: number) {
+  commitEnd(totalNum: number, cancel: boolean = false) {
     this.userCancel = false; // 重新打开终止开关
-    this.autoCommitView.postMessage('commit 完成', this.paramsObj);
-    getExtensionContext().globalState.update('commit-params', this.paramsObj);
-    outputLog('自动commit完成', `总commit次数${totalNum}`);
+    if (!cancel) {
+      this.autoCommitView.postMessage('commit 完成', this.paramsObj);
+      getExtensionContext().globalState.update('commit-params', this.paramsObj);
+      outputLog('自动commit完成', `总commit次数${totalNum}`);
+    }
     outputLog('保存参数信息');
   }
   cancelCommit() {
@@ -219,7 +224,7 @@ class CommitHandle {
       commitContent,
       'utf-8'
     );
-    return commitContent
+    return commitContent;
   }
   getDayCommitNumber(item: dayTime) {
     let dayCommitNumber = this.paramsObj.commitNumber;
