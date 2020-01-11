@@ -17,7 +17,7 @@
 ### 使用效果
 
 1. 使用本插件来控制commit次数.
-2.  如下图，你甚至规划一下`commit`次数，然后画出图形, 天空才是你的极限。
+2.  如下图，你甚至可以规划一下`commit`次数，然后画出图形, 天空才是你的极限：
 
 ![commit_img.png](https://ask.qcloudimg.com/draft/2195437/htbghw5joa.png)
 
