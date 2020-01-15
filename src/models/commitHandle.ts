@@ -1,8 +1,8 @@
 /*
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
- * LastEditors  : OBKoro1
- * LastEditTime : 2020-01-09 22:03:40
+ * @LastEditors  : OBKoro1
+ * @LastEditTime : 2020-01-15 11:46:52
  * FilePath     : /autoCommit/src/models/commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
@@ -20,6 +20,7 @@ import {
   getExtensionContext
 } from '../util/vscodeUtil';
 import WebView from './WebView';
+import { sep } from 'path';
 
 interface timeElement {
   value: Array<string>;
@@ -39,6 +40,7 @@ class CommitHandle {
   constructor(message: webviewMsg) {
     this.paramsObj = message.data;
     this.timeArr = [];
+    console.log('seb',sep)
     this.timeHandle();
     this.autoCommitView = getPanelWebview();
     this.userCancel = false;
@@ -96,9 +98,15 @@ class CommitHandle {
       if (this.cancelCommit()) break;
       // 每个日期commit次数
       let dayCommitNumber = this.getDayCommitNumber(item);
+      if(sep === '\\'){
+        const reg = new RegExp(/\\/g)
+        this.paramsObj.itemSrc = `${this.paramsObj.itemSrc.replace(reg, '/')}`;
+      }
+
       for (let i = 0; i < dayCommitNumber; i++) {
         if (this.cancelCommit()) break;
         let time = this.formatTime(item.value); // 2019-01-02 08:00
+        time = moment(time).format(); // 2019-01-02T00:00:00+0800
         let commitContent = this.commitFileContent(time, totalNum);
         let commitMsg: string = '';
         const isDebug = false; // 手动更改调试模拟是否提交git
@@ -107,7 +115,11 @@ class CommitHandle {
             // 异步执行命令 让出线程 打印日志 等
             commitMsg = await new Promise((resolve, reject) => {
               let cmd = `cd ${this.paramsObj.itemSrc} && git add . && git commit -m '${this.paramsObj.commitMsg}' --date='${time}'`;
-              exec(cmd, (error, stdout, stderr) => {
+              exec(cmd, {
+                encoding: 'utf8',
+                // cwd: this.paramsObj.itemSrc,
+                env: undefined
+              },(error, stdout, stderr) => {
                 if (error) {
                   outputLog(`执行命令出错:${cmd}`);
                   outputLog(`错误信息:${error}`, stderr);
@@ -159,7 +171,11 @@ class CommitHandle {
       this.autoCommitView.postMessage('提交中...', '提交中');
       const res = await new Promise((resolve, reject) => {
         let cmd = `cd ${this.paramsObj.itemSrc} && git pull && git push`;
-        exec(cmd, (error, stdout, stderr) => {
+        exec(cmd,{
+          encoding: 'utf8',
+          // cwd: this.paramsObj.itemSrc,
+          env: undefined
+        },(error, stdout, stderr) => {
           if (error) {
             outputLog(`执行命令出错:${cmd}`);
             outputLog(`错误信息:${error}`, stderr);
@@ -213,7 +229,6 @@ class CommitHandle {
   }
   // 组织commit文件的内容
   commitFileContent(time: string, totalNum: number) {
-    time = moment(time).format(); // 2019-01-02T00:00:00+0800
     const commitContent = `${time}\n随机数:${RandomNumber(
       1,
       100000
