@@ -6,7 +6,7 @@
 1. 使用本插件来控制commit次数.
 2.  如下图，你甚至可以规划一下`commit`次数，然后画出图形, 天空才是你的极限。
 
-![commit_img.png](https://user-gold-cdn.xitu.io/2020/1/10/16f8f8b6845fbf6f?w=1286&h=342&f=jpeg&s=110017)
+![commit_img.png](https://upload-images.jianshu.io/upload_images/5245297-2c357937f3122b08?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ### 功能特性
 
@@ -30,7 +30,7 @@
 #### 自动commit演示：
 
 
-![autoCommit.gif](https://user-gold-cdn.xitu.io/2020/1/9/16f8abbf33880485?w=1442&h=734&f=gif&s=2089891)
+![autoCommit.gif](https://upload-images.jianshu.io/upload_images/5245297-ba173538d0a037cf?imageMogr2/auto-orient/strip)
 
 ### 安装
 
@@ -44,7 +44,7 @@
 
     * 实际上可以输入下方选项的任何一段文字，都可以匹配到插件命令选项。
 
-![](https://user-gold-cdn.xitu.io/2020/1/9/16f8aaf61513c92f?w=1260&h=132&f=jpeg&s=36723)
+![image](https://upload-images.jianshu.io/upload_images/5245297-832f45c19fdca38e?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 ### 使用须知
 
@@ -64,7 +64,7 @@
     `3 contributions in private repositories`: 提交了三个commit到私有仓库。
 3. **要打开私有仓库贡献可见 ，别人才能看到私有仓库的commit** ,否则只能自己看到:
 
-![](https://user-gold-cdn.xitu.io/2020/1/9/16f8aaf61610c9bb?w=724&h=448&f=jpeg&s=73807)
+![image](https://upload-images.jianshu.io/upload_images/5245297-4b6984da51d815cd?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 #### 确保能够正常提交
 
@@ -97,7 +97,7 @@
 
 后面的没有再测试了，应该最深的颜色就是`#196127`。
 
-![commit颜色](https://user-gold-cdn.xitu.io/2020/1/9/16f8aaf9d291e0e0?w=164&h=268&f=jpeg&s=14811)
+![commit颜色](https://upload-images.jianshu.io/upload_images/5245297-73427fb0f18ccfa8?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 
 ## 插件运行机制相关
@@ -124,11 +124,11 @@ PS： 最小值为2，即每个日期随机commi 1/2次。
 
 如下图所示的配置(日期覆盖情况)，最后的结果是：
 
-12/01~12/06 使用默认commit次数，每天将会提交一次
-12/07~12/08 每天提交三次
-12/09~12/19 每天提交四次
+12/01-12/06 使用默认commit次数，每天将会提交一次
+12/07-12/08 每天提交三次
+12/09-12/19 每天提交四次
 
-![](https://user-gold-cdn.xitu.io/2020/1/9/16f8aaf9d2e5dcfa?w=1450&h=1000&f=jpeg&s=136345)
+![image](https://upload-images.jianshu.io/upload_images/5245297-5d9be61e7da96d62?imageMogr2/auto-orient/strip%7CimageView2/2/w/1240)
 
 #### commit次数的最大值
 
