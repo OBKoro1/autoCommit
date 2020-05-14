@@ -178,11 +178,13 @@ PS： 请在一个网络状况良好的地方运行，否则会导致`push`失�
 
 ### 头部注释插件
 
-本人还开源了另外一个VSCode插件: [koroFileHeader](https://github.com/OBKoro1/koro1FileHeader)，目前该插件已经有1000+ Star了，欢迎安装使用。
+本人还开源了另外一个VSCode插件: [koroFileHeader](https://github.com/OBKoro1/koro1FileHeader)，目前该插件已经有1300+ Star了，欢迎安装使用。
 
 1. 它是用于生成文件头部注释，帮助我们养成良好的编码习惯，规范整个团队风格。
 2. 插件支持所有主流语言,功能强大，灵活方便，文档齐全，食用简单！
 3. 一键添加佛祖保佑永无BUG、神兽护体等注释图案。
+
+![example.gif](https://raw.githubusercontent.com/OBKoro1/koro1FileHeader/master/images/example.gif)
 
 ### License
 
