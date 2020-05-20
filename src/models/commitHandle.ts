@@ -1,13 +1,3 @@
-/*
- * Author       : OBKoro1
- * Date         : 2019-12-30 16:59:30
- * @LastEditors  : OBKoro1
- * @LastEditTime : 2020-01-15 11:46:52
- * FilePath     : /autoCommit/src/models/commitHandle.ts
- * Description  : commit 具体操作
- * https://github.com/OBKoro1
- */
-
 import { webviewMsg } from '../util/dataStatement';
 import * as moment from 'moment';
 import * as fs from 'fs';
@@ -40,7 +30,6 @@ class CommitHandle {
   constructor(message: webviewMsg) {
     this.paramsObj = message.data;
     this.timeArr = [];
-    console.log('seb',sep)
     this.timeHandle();
     this.autoCommitView = getPanelWebview();
     this.userCancel = false;
@@ -114,10 +103,10 @@ class CommitHandle {
           try {
             // 异步执行命令 让出线程 打印日志 等
             commitMsg = await new Promise((resolve, reject) => {
-              let cmd = `cd ${this.paramsObj.itemSrc} && git add . && git commit -m '${this.paramsObj.commitMsg}' --date='${time}'`;
+              const cmd = `git add . && git commit -m '${this.paramsObj.commitMsg}' --date='${time}'`;
               exec(cmd, {
                 encoding: 'utf8',
-                // cwd: this.paramsObj.itemSrc,
+                cwd: this.paramsObj.itemSrc,
                 env: undefined
               },(error, stdout, stderr) => {
                 if (error) {
@@ -170,10 +159,10 @@ class CommitHandle {
       outputLog('提交中...');
       this.autoCommitView.postMessage('提交中...', '提交中');
       const res = await new Promise((resolve, reject) => {
-        let cmd = `cd ${this.paramsObj.itemSrc} && git pull && git push`;
+        const cmd = `git pull && git push`;
         exec(cmd,{
           encoding: 'utf8',
-          // cwd: this.paramsObj.itemSrc,
+          cwd: this.paramsObj.itemSrc,
           env: undefined
         },(error, stdout, stderr) => {
           if (error) {
@@ -196,8 +185,11 @@ class CommitHandle {
     this.autoCommitView.postMessage('回滚', '回滚');
     outputLog('回滚中...');
     return await new Promise((resolve, reject) => {
-      let cmd = `cd ${this.paramsObj.itemSrc} && git reset --hard HEAD~${totalNum}`;
-      exec(cmd, (error, stdout, stderr) => {
+      const cmd = `git reset --hard HEAD~${totalNum}`;
+      exec(cmd,{
+        encoding: 'utf8',
+        cwd: this.paramsObj.itemSrc,
+      }, (error, stdout, stderr) => {
         if (error) {
           outputLog(`执行命令出错:${cmd}`);
           outputLog(`回滚失败:${error}`, stderr);
@@ -291,22 +283,6 @@ class CommitHandle {
       k = k + 24 * 60 * 60 * 1000;
     }
     return timeArr;
-  }
-  //  同步执行命令
-  myExecSync(cmd: string) {
-    // 除了该方法直到子进程完全关闭后才返回 执行完毕 返回
-    try {
-      const res = execSync(cmd, {
-        encoding: 'utf8',
-        cwd: undefined,
-        env: undefined
-      });
-      return res;
-    } catch (err) {
-      outputLog(`执行命令出错:${cmd}`);
-      outputLog(`错误信息:${err}`);
-      return err;
-    }
   }
 }
 
