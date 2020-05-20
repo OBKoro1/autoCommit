@@ -62,7 +62,7 @@
                 <span>随机commit次数 :</span>
               </el-tooltip>
             </label>
-            <el-input-number v-model="form.commitNumber" :step="1" :min="2" :max="30" size="large"></el-input-number>
+            <el-input-number v-model="form.commitNumber" :step="1" :min="2" :max="88" size="large"></el-input-number>
           </el-form-item>
           <el-form-item class="form_item" prop="commitNumber" v-else>
             <label slot="label">
@@ -70,7 +70,7 @@
                 <span>默认commit次数 :</span>
               </el-tooltip>
             </label>
-            <el-input-number v-model="form.commitNumber" :step="1" :min="1" :max="0" size="large"></el-input-number>
+            <el-input-number v-model="form.commitNumber" :step="1" :min="1" :max="88" size="large"></el-input-number>
           </el-form-item>
           <el-form-item v-for="(ele, index) in form.timeArr" :key="index" :prop="'timeArr.' + index + '.value'" :rules="{
                 required: true, message: '日期不能为空', trigger: 'blur'
@@ -90,7 +90,7 @@
                 <span>该范围每天提交次数{{index+1}} :</span>
               </el-tooltip>
             </label>
-            <el-input-number v-model="ele.commitNumber" :step="1" :min="0" :max="30" ></el-input-number>
+            <el-input-number v-model="ele.commitNumber" :step="1" :min="0" :max="88"  ></el-input-number>
             <el-button @click.prevent="removeTime(index)"  :disabled="form.timeArr.length === 1">删除</el-button>
           </el-form-item>
           <el-form-item>
