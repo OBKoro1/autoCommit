@@ -43,6 +43,32 @@
             <el-input class="input_form" v-model="form.commitMsg" @change="commitMsgChange"></el-input>
             </el-input>
           </el-form-item>
+          <el-form-item class="form_item">
+            <label slot="label">
+              <el-tooltip class="item" content="更多细节设置" placement="top-start">
+                <span>更多设置 :</span>
+              </el-tooltip>
+            </label>
+            <el-switch
+              @change="switchChange"
+              v-model="more"
+              active-color="#13ce66"
+              inactive-color="#ff4949">
+            </el-switch>
+          </el-form-item>
+
+          <el-form-item class="form_item" v-if="more">
+            <label slot="label">
+              <el-tooltip class="item" content="间隔一定时间范围不提交commit几天，这样看起来更逼真" placement="top-start">
+                <span>间隔提交 :</span>
+              </el-tooltip>
+            </label>
+            <span>超出时间范围:</span>
+            <el-input-number v-model="moreObj.scopeDay" :step="1" :min="0"  size="mini"></el-input-number>
+            <span>超出这个范围随机不提交天数：</span>
+            <el-input-number v-model="moreObj.noCommitDay" :step="1" :min="0"  size="mini"></el-input-number>
+          </el-form-item>
+          
           <el-form-item class="form_item" prop="commitNumber">
             <label slot="label">
               <el-tooltip class="item" content="时间范围内默认每个日期是否随机commit" placement="top-start">
@@ -186,7 +212,7 @@
               commitNumber: 0
             }
           ],
-          commitNumber: 10,
+          commitNumber: 10
         },
         rules: {
           'itemSrc': [
@@ -213,6 +239,12 @@
               required: true
             }
           ]
+        },
+        // 更多设置
+        more: false,
+        moreObj: {
+         scopeDay: 0, // 多长的时间范围
+         noCommitDay: 0, // 这段时间不提交几天
         }
       };
     },
@@ -241,8 +273,24 @@
         if(isWeb){
           this.mockLog()
         }else{
-          this.postMessage('commit', this.form);
+          const params = { 
+            form: this.form,
+            moreObj: this.moreObj
+          }
+          this.postMessage('commit', params);
         }
+      },
+      // 验证表单数据
+      checkData() {
+        if(this.moreObj.scopeDay !== 0 && this.moreObj.scopeDay === this.moreObj.noCommitDay){
+          this.$message({
+              type: 'error',
+              showClose: true,
+              message:  `更多设置中日期范围和不提交天数不能相同`,
+            });
+            return false
+        }
+        return true
       },
       // 发送消息到插件
       postMessage(command, data) {

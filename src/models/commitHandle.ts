@@ -1,9 +1,9 @@
 /*
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
- * @LastEditors  : OBKoro1
- * @LastEditTime : 2020-01-15 11:46:52
- * FilePath     : /autoCommit/src/models/commitHandle.ts
+ * LastEditors  : OBKoro1
+ * LastEditTime : 2020-08-29 14:21:47
+ * FilePath     : \autoCommit\src\models\commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
  */
@@ -34,11 +34,13 @@ interface dayTime {
 
 class CommitHandle {
   public paramsObj: any;
+  public moreObj: any;
   public timeArr: Array<dayTime>;
   public autoCommitView: WebView;
   private userCancel: boolean;
   constructor(message: webviewMsg) {
-    this.paramsObj = message.data;
+    this.paramsObj = message.data.form;
+    this.moreObj = message.data.moreObj;
     this.timeArr = [];
     console.log('seb',sep)
     this.timeHandle();
@@ -88,7 +90,20 @@ class CommitHandle {
         }
       }
     );
-    this.commitFn();
+    this.deleteDayArrDay()
+    this.commitFn()
+  }
+  // 随机删除日期数组中的某几天
+  deleteDayArrDay() {
+    const noCommitDay = this.moreObj.noCommitDay
+    const scopeDay = this.moreObj.scopeDay
+    if(scopeDay < 1 || noCommitDay < 1) return // 必须大于1
+    if(scopeDay > this.timeArr.length) return // 日期不够
+    // 删除
+    for(let i = 0; i < noCommitDay; i++){
+       let ranDomNum = Math.floor(Math.random() * this.timeArr.length); // 随机数
+       this.timeArr.splice(ranDomNum, 1);
+     }
   }
   async commitFn() {
     await outputLog('将要commit的日期:', JSON.stringify(this.timeArr));
