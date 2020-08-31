@@ -2,9 +2,11 @@
 
 ### 如果觉得本插件还不错的话，给个[Star](https://github.com/OBKoro1/autoCommit)吧~
 
-<!-- TODO: npm包形式 -->
-<!-- webview 的icon -->
-<!-- TODO: 支持谷歌插件 -->
+### [V1.0.5]
+
+* 增加新功能：超过一定天数范围内，随机部分天数不提交`commit`，没有绿格子，看起来更逼真。
+* 重写wiki配置文档
+
 
 ### [V1.0.3]
 
