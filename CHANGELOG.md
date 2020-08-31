@@ -4,8 +4,8 @@
 
 ### [V1.0.5]
 
-* 增加新功能：超过一定天数范围内，随机部分天数不提交`commit`，没有绿格子，看起来更逼真。
-* 重写wiki配置文档
+* 增加新功能：超过一定天数范围内，[随机部分天数不提交](https://github.com/OBKoro1/autoCommit/wiki/%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E#%E9%97%B4%E9%9A%94%E6%8F%90%E4%BA%A4)`commit`，没有绿格子，看起来更逼真。
+* 重写wiki[配置文档](https://github.com/OBKoro1/autoCommit/wiki/%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E)
 
 ### [V1.0.4]
 
