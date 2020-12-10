@@ -54,7 +54,7 @@ function showMessage(message: string, type = 'error') {
     },
     error: () => {
       vscode.window.showErrorMessage(message);
-    }
+    },
   };
 
   actions[type]();
@@ -67,5 +67,5 @@ export {
   setPanelWebview, // 存储webview
   showMessage, // vscode 消息通知
   setExtensionContext, // 存储插件上下文
-  getExtensionContext // 获取插件上下文
+  getExtensionContext, // 获取插件上下文
 };
