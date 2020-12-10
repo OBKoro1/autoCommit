@@ -6,6 +6,7 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   plugins: ['@typescript-eslint'],
   rules: {
+    'no-console': 'off',
     'no-restricted-syntax': 'off',
     'no-continue': 'off',
     // 禁止使用 var
