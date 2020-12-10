@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2020-12-10 18:51:54
+ * LastEditTime : 2020-12-10 23:46:26
  * FilePath     : \autoCommit\src\models\commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
@@ -85,13 +85,16 @@ class CommitHandle {
 
   private userCancel: boolean;
 
+  private totalCommit: number; // 总commit次数
+
   constructor(message: WebviewMsg) {
     this.paramsObj = message.data.form;
     this.moreObj = message.data.moreObj;
     this.timeArr = [];
+    this.totalCommit = 0;
+    this.userCancel = false;
     this.timeHandle();
     this.autoCommitView = getPanelWebview();
-    this.userCancel = false;
   }
 
   // 处理所有时间段
@@ -107,9 +110,12 @@ class CommitHandle {
         if (index !== -1) {
           this.timeArr.splice(index, 1);
         }
+        // 获取当天的commit次数
+        const dayCommitNumber = this.getDayCommitNumber(item.commitNumber);
+        this.totalCommit = dayCommitNumber + this.totalCommit;
         this.timeArr.push({
           value: ele,
-          commitNumber: item.commitNumber,
+          commitNumber: dayCommitNumber,
         });
       });
     });
@@ -153,12 +159,13 @@ class CommitHandle {
 
   async commitFn() {
     await outputLog('将要commit的日期:', JSON.stringify(this.timeArr));
+    outputLog('总commit次数:', this.totalCommit);
     let totalNum = 0; // 总commit次数
     // 遍历日期
     for (const item of this.timeArr.values()) {
       if (this.cancelCommit()) break;
       // 每个日期commit次数
-      const dayCommitNumber = this.getDayCommitNumber(item);
+      const dayCommitNumber = item.commitNumber;
       if (sep === '\\') {
         const reg = new RegExp(/\\/g);
         this.paramsObj.itemSrc = `${this.paramsObj.itemSrc.replace(reg, '/')}`;
@@ -192,6 +199,7 @@ class CommitHandle {
               });
             });
           } catch (err) {
+            outputLog(`commit出错:${err}`);
             continue; // 错误 退出本次循环
           }
         } else {
@@ -204,9 +212,10 @@ class CommitHandle {
             }, 1000);
           });
         }
-        outputLog(`${totalNum + 1}commit内容`, commitContent);
-        outputLog(`${totalNum + 1}commit信息`, commitMsg);
         totalNum += 1;
+        // commit次数小于100显示log
+        console.log(`${totalNum}commit内容`, commitContent);
+        console.log(`${totalNum}commit信息`, commitMsg);
       }
     }
     this.pushCommitFn(totalNum);
@@ -315,15 +324,17 @@ class CommitHandle {
     return commitContent;
   }
 
-  getDayCommitNumber(item: DayTime) {
-    let dayCommitNumber = this.paramsObj.commitNumber;
+  // 获取当天的commit次数
+  getDayCommitNumber(commitNumber: number) {
+    let dayCommitNumber = this.paramsObj.commitNumber; // 固定commit次数
+    // 使用随机commit次数
     if (this.paramsObj.randomCommit) {
-      // 随机commit次数
       dayCommitNumber = RandomNumber(1, this.paramsObj.commitNumber);
     }
-    if (item.commitNumber !== 0) {
-      // 如果该范围有commit次数 则用该范围的
-      dayCommitNumber = item.commitNumber;
+
+    // 如果该时间范围有commit次数 则用该范围的
+    if (commitNumber !== 0) {
+      dayCommitNumber = commitNumber;
     }
     return dayCommitNumber;
   }
