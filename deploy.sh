@@ -2,7 +2,7 @@
  # Author       : OBKoro1
  # Date         : 2019-12-26 20:55:46
  # LastEditors  : OBKoro1
- # LastEditTime : 2020-11-18 16:40:49
+ # LastEditTime : 2020-12-11 00:53:24
  # FilePath     : \autoCommit\deploy.sh
  # Description  : 
  # https://github.com/OBKoro1
@@ -23,9 +23,6 @@ vsce package --yarn # 解决下文报错
 # vscodium发布插件
 
 # npx ovsx publish file -p token
-
-# TODO: 修改版本
-# npx ovsx publish /Users/koro/work/web_my/koro1FileHeader/korofileheader-4.7.8.vsix -p 765ed6f2-2c30-4466-9cb5-223e323b650a
 
 # tag
 # https://git-scm.com/book/zh/v2/Git-%E5%9F%BA%E7%A1%80-%E6%89%93%E6%A0%87%E7%AD%BE
