@@ -12,7 +12,6 @@ about: Create a report to help us improve
 
 #### 描述bug(必填)
 一个清楚而简洁的bug描述。
-
 #### 插件运行日志(必填):
 
 ```js
@@ -24,7 +23,16 @@ about: Create a report to help us improve
 ```js
 // 参数
 ```
+### 插件运行截图
 
+### Git仓库提交截图
+
+提交成功给个截图
+首页的截图
+
+### 分支名
+
+master
 #### 怀疑可能是哪里出现问题
 
 #### 屏幕截图(选填)
