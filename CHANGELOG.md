@@ -2,6 +2,13 @@
 
 ### 如果觉得本插件还不错的话，给个[Star](https://github.com/OBKoro1/autoCommit)吧~
 
+<!-- TODO: 提交之前检查eslint -->
+<!-- TODO: 修改webpack配置 -->
+
+### [V1.0.7]
+
+* fix: 修复commit日期为今天的问题
+
 ### [V1.0.6]
 
 * 取消commit期间的日志, 防止进程通信频繁导致卡顿
