@@ -2,8 +2,8 @@
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2020-12-10 23:46:26
- * FilePath     : \autoCommit\src\models\commitHandle.ts
+ * LastEditTime : 2020-12-22 18:15:36
+ * File         : \autoCommit\src\models\commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
  */
@@ -159,6 +159,7 @@ class CommitHandle {
 
   async commitFn() {
     await outputLog('将要commit的日期:', JSON.stringify(this.timeArr));
+    outputLog('总commit天数:', this.timeArr.length);
     outputLog('总commit次数:', this.totalCommit);
     let totalNum = 0; // 总commit次数
     // 遍历日期
@@ -183,7 +184,8 @@ class CommitHandle {
             // 异步执行命令 让出线程 打印日志 等
             // eslint-disable-next-line no-await-in-loop
             commitMsg = await new Promise((resolve, reject) => {
-              const cmd = `git add . && git commit -m '${this.paramsObj.commitMsg}' --date='${time}'`;
+              // 先提交commit 再修改commit日期和时间
+              const cmd = `git add . && git commit -m '${this.paramsObj.commitMsg}' && GIT_COMMITTER_DATE='${time}' GIT_AUTHOR_DATE='${time}' git commit --amend --no-edit --date '${time}'`;
               exec(cmd, {
                 encoding: 'utf8',
                 cwd: this.paramsObj.itemSrc,
@@ -243,7 +245,7 @@ class CommitHandle {
       outputLog('提交中...');
       this.autoCommitView.postMessage('提交中...', '提交中');
       const res = await new Promise((resolve, reject) => {
-        const cmd = 'git pull && git push';
+        const cmd = 'git pull --rebase  && git push';
         exec(cmd, {
           encoding: 'utf8',
           cwd: this.paramsObj.itemSrc,
