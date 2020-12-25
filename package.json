@@ -14,6 +14,17 @@
     "test": "yarn run compile && node ./node_modules/vscode/bin/test",
     "lint": "eslint --ext .ts,.vue src --fix"
   },
+  "husky": {
+    "hooks": {
+      "pre-commit": "lint-staged"
+    }
+  },
+  "lint-staged": {
+    "src/**/*.{ts,vue}": [
+      "npm run lint",
+      "git add"
+    ]
+  },
   "homepage": "https://github.com/OBKoro1/autoCommit",
   "license": "MIT",
   "author": {
@@ -86,15 +97,17 @@
     "eslint": "^7.12.1",
     "eslint-config-airbnb-typescript": "^12.0.0",
     "glob": "^7.1.5",
+    "husky": "^4.3.6",
     "mocha": "^6.2.2",
-    "typescript": "^3.9.7",
     "ts-loader": "^6.2.1",
+    "typescript": "^3.9.7",
     "vscode": "^1.1.36",
     "webpack": "^4.41.4",
     "webpack-cli": "^3.3.10"
   },
   "dependencies": {
     "eslint-plugin-import": "^2.22.1",
+    "lint-staged": "^10.5.3",
     "moment": "^2.24.0"
   }
 }
