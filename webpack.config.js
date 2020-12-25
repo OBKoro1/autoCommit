@@ -2,26 +2,22 @@
  * Author       : OBKoro1
  * Date         : 2019-12-26 17:42:32
  * LastEditors  : OBKoro1
- * LastEditTime : 2019-12-26 20:58:58
- * FilePath     : /autoCommit/webpack.config.js
+ * LastEditTime : 2020-12-25 14:35:45
+ * FilePath     : \autoCommit\webpack.config.js
  * Description  : webpack 配置
  * https://github.com/OBKoro1
  */
 
+// @ts-check
 
-//@ts-check
+const path = require('path');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
-'use strict'
+const outputPathName = 'out';
 
-const path = require('path')
-const CopyWebpackPlugin = require('copy-webpack-plugin')
-const outputPathName = 'out'
+const pathResolve = (p) => path.resolve(__dirname, p);
 
-const pathResolve = p => {
-  return path.resolve(__dirname, p)
-}
-
-/**@type {import('webpack').Configuration}*/
+/** @type {import('webpack').Configuration} */
 const config = {
   target: 'node', // vscode插件运行在Node.js环境中 📖 -> https://webpack.js.org/configuration/node/
 
@@ -31,18 +27,18 @@ const config = {
     path: pathResolve(outputPathName),
     filename: 'extension.js',
     libraryTarget: 'commonjs2',
-    devtoolModuleFilenameTemplate: '../[resource-path]'
+    devtoolModuleFilenameTemplate: '../[resource-path]',
   },
   devtool: 'source-map',
   externals: {
-    vscode: 'commonjs vscode' // vscode-module是热更新的临时目录，所以要排除掉。 在这里添加其他不应该被webpack打包的文件, 📖 -> https://webpack.js.org/configuration/externals/
+    vscode: 'commonjs vscode', // vscode-module是热更新的临时目录，所以要排除掉。 在这里添加其他不应该被webpack打包的文件, 📖 -> https://webpack.js.org/configuration/externals/
   },
   resolve: {
     alias: {
-      '~': pathResolve('src')
+      '~': pathResolve('src'),
     },
     // 支持读取TypeScript和JavaScript文件, 📖 -> https://github.com/TypeStrong/ts-loader
-    extensions: ['.ts', '.js']
+    extensions: ['.ts', '.js'],
   },
   module: {
     rules: [
@@ -51,26 +47,27 @@ const config = {
         exclude: /node_modules/,
         use: [
           {
-            loader: 'ts-loader'
-          }
-        ]
-      }
-    ]
+            loader: 'ts-loader',
+          },
+        ],
+      },
+    ],
   },
   plugins: [
+    // @ts-ignore
     new CopyWebpackPlugin([
       {
         from: pathResolve('src/views'),
         to: pathResolve(`${outputPathName}/views`),
-        ignore: ['.*']
+        ignore: ['.*'],
       },
       {
         from: pathResolve('src/assets'),
         to: pathResolve(`${outputPathName}/assets`),
-        ignore: ['.*']
-      }
-    ])
-  ]
-}
+        ignore: ['.*'],
+      },
+    ]),
+  ],
+};
 
-module.exports = config
+module.exports = config;
