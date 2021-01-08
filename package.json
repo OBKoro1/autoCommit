@@ -3,7 +3,7 @@
   "displayName": "Auto Commit",
   "description": "自动提交commit到github",
   "publisher": "OBKoro1",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "scripts": {
     "build": "vsce package",
     "vscode:prepublish": "webpack --mode production",

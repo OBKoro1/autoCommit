@@ -5,6 +5,11 @@
 <!-- TODO: 提交之前检查eslint -->
 <!-- TODO: 修改webpack配置 -->
 
+
+### [V1.0.8]
+
+* fix: 修复windows系统无法使用的问题
+* fix: 修复选择日期差一天的问题
 ### [V1.0.7]
 
 * fix: 修复commit日期为今天的问题
