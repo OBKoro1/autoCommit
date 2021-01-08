@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2020-12-22 18:15:36
+ * LastEditTime : 2021-01-08 19:50:07
  * File         : \autoCommit\src\models\commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
@@ -35,21 +35,9 @@ interface DayTime {
 // 获取两个日期之间的间隔: [ '2019-02-02', '2019-02-03' ... ]
 const getAllDay = (begin: string, end: string) => {
   const timeArr = [];
-  const beginSplit: Array<string> = begin.split('-');
-  const endSplit: Array<string> = end.split('-');
-  const beginDate = new Date();
-  beginDate.setUTCFullYear(
-    Number(beginSplit[0]),
-    Number(beginSplit[1]) - 1,
-    Number(beginSplit[2]),
-  );
-  const endDate = new Date();
-  endDate.setUTCFullYear(
-    Number(endSplit[0]),
-    Number(endSplit[1]) - 1,
-    Number(endSplit[2]),
-  );
+  const beginDate: Date = moment(begin).toDate();
   const beginNumber = beginDate.getTime();
+  const endDate = moment(end).toDate();
   const endNumber = endDate.getTime();
   for (let k: any = beginNumber; k <= endNumber;) {
     // eslint-disable-next-line radix
@@ -162,15 +150,15 @@ class CommitHandle {
     outputLog('总commit天数:', this.timeArr.length);
     outputLog('总commit次数:', this.totalCommit);
     let totalNum = 0; // 总commit次数
+    if (sep === '\\') {
+      const reg = new RegExp(/\\/g);
+      this.paramsObj.itemSrc = `${this.paramsObj.itemSrc.replace(reg, '/')}`;
+    }
     // 遍历日期
     for (const item of this.timeArr.values()) {
       if (this.cancelCommit()) break;
       // 每个日期commit次数
       const dayCommitNumber = item.commitNumber;
-      if (sep === '\\') {
-        const reg = new RegExp(/\\/g);
-        this.paramsObj.itemSrc = `${this.paramsObj.itemSrc.replace(reg, '/')}`;
-      }
       /* eslint no-plusplus: ["error", { "allowForLoopAfterthoughts": true }] */
       for (let i = 0; i < dayCommitNumber; i++) {
         if (this.cancelCommit()) break;
@@ -185,20 +173,23 @@ class CommitHandle {
             // eslint-disable-next-line no-await-in-loop
             commitMsg = await new Promise((resolve, reject) => {
               // 先提交commit 再修改commit日期和时间
-              const cmd = `git add . && git commit -m '${this.paramsObj.commitMsg}' && GIT_COMMITTER_DATE='${time}' GIT_AUTHOR_DATE='${time}' git commit --amend --no-edit --date '${time}'`;
-              exec(cmd, {
-                encoding: 'utf8',
-                cwd: this.paramsObj.itemSrc,
-                env: undefined,
-              }, (error, stdout, stderr) => {
-                if (error) {
-                  outputLog(`执行命令出错:${cmd}`);
-                  outputLog(`错误信息:${error}`, stderr);
-                  reject(error);
-                  return;
-                }
-                resolve(stdout);
-              });
+              const cmd = `git add . && git commit -m '${this.paramsObj.commitMsg}' && set GIT_COMMITTER_DATE='${time}' && set GIT_AUTHOR_DATE='${time}' && git commit --amend --no-edit --date '${time}'`;
+              exec(
+                cmd,
+                {
+                  cwd: this.paramsObj.itemSrc,
+                  env: process.env,
+                },
+                (error, stdout, stderr) => {
+                  if (error) {
+                    outputLog(`执行命令出错:${cmd}`);
+                    outputLog(`错误信息:${error}`, stderr);
+                    reject(error);
+                    return;
+                  }
+                  resolve(stdout);
+                },
+              );
             });
           } catch (err) {
             outputLog(`commit出错:${err}`);
@@ -246,22 +237,26 @@ class CommitHandle {
       this.autoCommitView.postMessage('提交中...', '提交中');
       const res = await new Promise((resolve, reject) => {
         const cmd = 'git pull --rebase  && git push';
-        exec(cmd, {
-          encoding: 'utf8',
-          cwd: this.paramsObj.itemSrc,
-          env: undefined,
-        }, (error, stdout, stderr) => {
-          if (error) {
-            outputLog(`执行命令出错:${cmd}`);
-            outputLog(`错误信息:${error}`, stderr);
-            outputLog(
-              'git push失败很可能是你的网络有问题，请换到一个网络状况比较良好的地方，然后再项目下执行 git push操作。',
-            );
-            reject(error);
-            return;
-          }
-          resolve(stdout);
-        });
+        exec(
+          cmd,
+          {
+            encoding: 'utf8',
+            cwd: this.paramsObj.itemSrc,
+            env: undefined,
+          },
+          (error, stdout, stderr) => {
+            if (error) {
+              outputLog(`执行命令出错:${cmd}`);
+              outputLog(`错误信息:${error}`, stderr);
+              outputLog(
+                'git push失败很可能是你的网络有问题，请换到一个网络状况比较良好的地方，然后再项目下执行 git push操作。',
+              );
+              reject(error);
+              return;
+            }
+            resolve(stdout);
+          },
+        );
       });
       outputLog('提交信息:', res);
       this.commitEnd(totalNum);
@@ -273,19 +268,23 @@ class CommitHandle {
     outputLog('回滚中...');
     const p = await new Promise((resolve, reject) => {
       const cmd = `git reset --hard HEAD~${totalNum}`;
-      exec(cmd, {
-        encoding: 'utf8',
-        cwd: this.paramsObj.itemSrc,
-      }, (error, stdout, stderr) => {
-        if (error) {
-          outputLog(`执行命令出错:${cmd}`);
-          outputLog(`回滚失败:${error}`, stderr);
-          reject(error);
-          return;
-        }
-        outputLog(`回滚${totalNum}次commit成功:`, stdout);
-        resolve(stdout);
-      });
+      exec(
+        cmd,
+        {
+          encoding: 'utf8',
+          cwd: this.paramsObj.itemSrc,
+        },
+        (error, stdout, stderr) => {
+          if (error) {
+            outputLog(`执行命令出错:${cmd}`);
+            outputLog(`回滚失败:${error}`, stderr);
+            reject(error);
+            return;
+          }
+          outputLog(`回滚${totalNum}次commit成功:`, stdout);
+          resolve(stdout);
+        },
+      );
     });
     return p;
   }
