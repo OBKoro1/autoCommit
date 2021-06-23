@@ -72,7 +72,7 @@
 
 ### 其他开源推荐
 
-#### koroFileHeader
+#### [koroFileHeader](https://github.com/OBKoro1/koro1FileHeader)
 
 1. 它是用于生成文件头部注释以及函数注释的，帮助我们养成良好的编码习惯，规范整个团队风格。
 2. 插件从18年5月维护至今, 2.7K+ Star，插件支持所有主流语言,功能强大，灵活方便，文档齐全，食用简单！
@@ -81,7 +81,7 @@
 
 ![函数注释](https://github.com/OBKoro1/koro1FileHeader/raw/master/images/function-params.gif?raw=true)
 
-#### stop-mess-around
+#### [stop-mess-around](https://github.com/OBKoro1/stop-mess-around)
 
 chrome插件**通过强制的手段禁止大家浪费时间摸鱼**，在上班/学习期间下意识的打开摸鱼网站, 自动检测摸鱼网站, 提示激励信息后, 关闭摸鱼网站。
 
