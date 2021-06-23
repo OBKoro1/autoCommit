@@ -70,12 +70,22 @@
 
 插件如构成侵权，请通过邮件联系我。
 
-### 头部注释插件
+### 其他开源推荐
 
-本人还开源了另外一个VSCode插件: [koroFileHeader](https://github.com/OBKoro1/koro1FileHeader)，目前该插件已经有1000+ Star了，欢迎安装使用。
+#### koroFileHeader
 
-1. 它是用于生成文件头部注释，帮助我们养成良好的编码习惯，规范整个团队风格。
-2. 插件支持所有主流语言,功能强大，灵活方便，文档齐全，食用简单！
+1. 它是用于生成文件头部注释以及函数注释的，帮助我们养成良好的编码习惯，规范整个团队风格。
+2. 插件从18年5月维护至今, 2.7K+ Star，插件支持所有主流语言,功能强大，灵活方便，文档齐全，食用简单！
+
+![头部注释](https://raw.githubusercontent.com/OBKoro1/koro1FileHeader/master/images/example.gif)
+
+![函数注释](https://github.com/OBKoro1/koro1FileHeader/raw/master/images/function-params.gif?raw=true)
+
+#### stop-mess-around
+
+chrome插件**通过强制的手段禁止大家浪费时间摸鱼**，在上班/学习期间下意识的打开摸鱼网站, 自动检测摸鱼网站, 提示激励信息后, 关闭摸鱼网站。
+
+![](https://github.com/OBKoro1/stop-mess-around/raw/dev/static/start.gif?raw=true)
 
 ### License
 
@@ -85,5 +95,5 @@
 
 如果插件觉得还不错的话，就给个 [Star](https://github.com/OBKoro1/autoCommit) ⭐️ 鼓励一下我吧~
 
-[前端进阶积累](http://obkoro1.com/web_accumulate/)、[公众号](https://user-gold-cdn.xitu.io/2018/5/1/1631b6f52f7e7015?w=344&h=344&f=jpeg&s=8317)、[GitHub](https://github.com/OBKoro1)
+[前端进阶积累](http://obkoro1.com/web_accumulate/)、[公众号](https://user-gold-cdn.xitu.io/2018/5/1/1631b6f52f7e7015?w=344&h=344&f=jpeg&s=8317)、[GitHub](https://github.com/OBKoro1)、[微信](https://raw.githubusercontent.com/OBKoro1/articleImg_src/master/weibo_img_move/005Y4rCogy1fsnslyz5pnj309j0cdgm6.jpg):OBkoro1、邮箱：obkoro1@foxmail.com
 

@@ -2,10 +2,6 @@
 
 ### 如果觉得本插件还不错的话，给个[Star](https://github.com/OBKoro1/autoCommit)吧~
 
-<!-- TODO: 提交之前检查eslint -->
-<!-- TODO: 修改webpack配置 -->
-
-
 ### [V1.0.8]
 
 * fix: 修复windows系统无法使用的问题
