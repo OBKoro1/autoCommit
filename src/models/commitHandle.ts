@@ -2,7 +2,7 @@
  * Author       : OBKoro1
  * Date         : 2019-12-30 16:59:30
  * LastEditors  : OBKoro1
- * LastEditTime : 2021-01-08 19:50:07
+ * LastEditTime : 2021-06-27 16:18:59
  * File         : \autoCommit\src\models\commitHandle.ts
  * Description  : commit 具体操作
  * https://github.com/OBKoro1
@@ -139,7 +139,7 @@ class CommitHandle {
     if (scopeDay < 1 || noCommitDay < 1) return; // 必须大于1
     if (scopeDay > this.timeArr.length) return; // 日期不够
     // 删除
-    for (let i = 0; i < noCommitDay; i++) {
+    for (let i = 0; i < noCommitDay; i += 1) {
       const ranDomNum = Math.floor(Math.random() * this.timeArr.length); // 随机数
       this.timeArr.splice(ranDomNum, 1);
     }
@@ -159,45 +159,38 @@ class CommitHandle {
       if (this.cancelCommit()) break;
       // 每个日期commit次数
       const dayCommitNumber = item.commitNumber;
-      /* eslint no-plusplus: ["error", { "allowForLoopAfterthoughts": true }] */
-      for (let i = 0; i < dayCommitNumber; i++) {
+      for (let i = 0; i < dayCommitNumber; i += 1) {
         if (this.cancelCommit()) break;
         let time = getTodayRandomNumber(item.value); // 2019-01-02 08:00
         time = moment(time).format(); // 2019-01-02T00:00:00+0800
         const commitContent = this.commitFileContent(time, totalNum);
-        let commitMsg: string = '';
+        let commitMsg;
         const isDebug = false; // 手动更改调试模拟是否提交git
         if (!isProduction() || !isDebug) {
           try {
-            // 异步执行命令 让出线程 打印日志 等
-            // eslint-disable-next-line no-await-in-loop
-            commitMsg = await new Promise((resolve, reject) => {
-              // 先提交commit 再修改commit日期和时间
-              const cmd = `git add . && git commit -m '${this.paramsObj.commitMsg}' && set GIT_COMMITTER_DATE='${time}' && set GIT_AUTHOR_DATE='${time}' && git commit --amend --no-edit --date '${time}'`;
-              exec(
-                cmd,
-                {
-                  cwd: this.paramsObj.itemSrc,
-                  env: process.env,
-                },
-                (error, stdout, stderr) => {
-                  if (error) {
-                    outputLog(`执行命令出错:${cmd}`);
-                    outputLog(`错误信息:${error}`, stderr);
-                    reject(error);
-                    return;
-                  }
-                  resolve(stdout);
-                },
-              );
-            });
+            // 显示绿点成功 但是在仓库的时间不对 github可能修改了规则 后来的commit只会在上面
+            // 先add
+            const commitCmd = 'git add .';
+            // 先add 和提交commit
+            // const commitCmd = `git add . && git commit -m '${this.paramsObj.commitMsg}'`;
+            commitMsg = await this.execCmd(commitCmd);
+            // 修改commit日期和时间
+            const cmd = `git commit --date='${time}' -am '${this.paramsObj.commitMsg}'`;
+
+            // set在window下可能有兼容问题
+            // const cmd = `git commit --amend --date='${time}' -am '${this.paramsObj.commitMsg}' && set GIT_COMMITTER_DATE='${time}' && set GIT_AUTHOR_DATE='${time}' && git commit --amend --no-edit --date '${time}'`;
+            // const cmd = `set GIT_COMMITTER_DATE='${time}' && set GIT_AUTHOR_DATE='${time}' && git commit --amend --no-edit --date '${time}'`;
+            // 修改commit的id 的提交time
+            // const commitId = await this.execCmd('git rev-parse HEAD');
+            // const cmd = `git commit --amend --date='${time}' -C ${commitId}`;
+
+            commitMsg = await this.execCmd(cmd);
           } catch (err) {
             outputLog(`commit出错:${err}`);
             continue; // 错误 退出本次循环
           }
         } else {
           // 模拟git提交
-          // eslint-disable-next-line no-await-in-loop
           await new Promise((resolve) => {
             setTimeout(() => {
               outputLog('延迟一秒');
@@ -224,9 +217,7 @@ class CommitHandle {
       thinkNumber = 2000; // 无感 考虑两秒
     }
     await new Promise((resolve) => {
-      setTimeout(() => {
-        resolve();
-      }, thinkNumber);
+      setTimeout(resolve, thinkNumber);
     });
     if (this.cancelCommit()) {
       if (totalNum === 0) return;
@@ -235,29 +226,8 @@ class CommitHandle {
     } else {
       outputLog('提交中...');
       this.autoCommitView.postMessage('提交中...', '提交中');
-      const res = await new Promise((resolve, reject) => {
-        const cmd = 'git pull --rebase  && git push';
-        exec(
-          cmd,
-          {
-            encoding: 'utf8',
-            cwd: this.paramsObj.itemSrc,
-            env: undefined,
-          },
-          (error, stdout, stderr) => {
-            if (error) {
-              outputLog(`执行命令出错:${cmd}`);
-              outputLog(`错误信息:${error}`, stderr);
-              outputLog(
-                'git push失败很可能是你的网络有问题，请换到一个网络状况比较良好的地方，然后再项目下执行 git push操作。',
-              );
-              reject(error);
-              return;
-            }
-            resolve(stdout);
-          },
-        );
-      });
+      const cmd = 'git pull --rebase  && git push';
+      const res = await this.execCmd(cmd);
       outputLog('提交信息:', res);
       this.commitEnd(totalNum);
     }
@@ -266,26 +236,9 @@ class CommitHandle {
   async resetCommit(totalNum: number) {
     this.autoCommitView.postMessage('回滚', '回滚');
     outputLog('回滚中...');
-    const p = await new Promise((resolve, reject) => {
-      const cmd = `git reset --hard HEAD~${totalNum}`;
-      exec(
-        cmd,
-        {
-          encoding: 'utf8',
-          cwd: this.paramsObj.itemSrc,
-        },
-        (error, stdout, stderr) => {
-          if (error) {
-            outputLog(`执行命令出错:${cmd}`);
-            outputLog(`回滚失败:${error}`, stderr);
-            reject(error);
-            return;
-          }
-          outputLog(`回滚${totalNum}次commit成功:`, stdout);
-          resolve(stdout);
-        },
-      );
-    });
+    const cmd = `git reset --hard HEAD~${totalNum}`;
+    const p = await this.execCmd(cmd);
+    outputLog(`回滚${totalNum}次commit成功:`, p);
     return p;
   }
 
@@ -323,6 +276,28 @@ class CommitHandle {
       'utf-8',
     );
     return commitContent;
+  }
+
+  // 执行命令封装
+  execCmd(cmd: string) {
+    return new Promise((resolve, reject) => {
+      exec(
+        cmd,
+        {
+          cwd: this.paramsObj.itemSrc,
+          env: process.env,
+        },
+        (error, stdout, stderr) => {
+          if (error) {
+            outputLog(`执行命令出错:${cmd}`);
+            outputLog(`错误信息:${error}`, stderr);
+            reject(error);
+            return;
+          }
+          resolve(stdout);
+        },
+      );
+    });
   }
 
   // 获取当天的commit次数
