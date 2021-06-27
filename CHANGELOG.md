@@ -2,6 +2,11 @@
 
 ### 如果觉得本插件还不错的话，给个[Star](https://github.com/OBKoro1/autoCommit)吧~
 
+### [V1.0.9]
+
+* fix: commit命令的测试与兼容
+* 优化了一些细节
+
 ### [V1.0.8]
 
 * fix: 修复windows系统无法使用的问题
