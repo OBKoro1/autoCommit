@@ -1,10 +1,28 @@
 # autoCommit
-> 用于刷commit记录，可以刷过去几年的commit以及未来的commit, 一键帮你把github首页的绿色格子填满。
 
-* 它是一个VScode插件可以自由控制commit日期(提交过去几年的commit以及未来的commit)
-* 它可以自由控制commit次数, 固定或者随机commit次数。
-* 插件提供完善的日志: 清晰的了解插件的运行情况
+<a href="https://github.com/OBKoro1/koro1FileHeader">
+    <img alt="autoCommit Repo stars" src="https://img.shields.io/github/stars/OBKoro1/autoCommit">
+</a>
+<a href="https://github.com/OBKoro1/autoCommit/wiki/%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E">
+    <img alt="wiki文档详细" src="https://img.shields.io/badge/wiki文档-齐全详细-blue">
+</a>
+<a href="https://github.com/OBKoro1/koro1FileHeader/wiki/%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97">
+    <img alt="持续维护" src="https://img.shields.io/badge/2020年开源-持续维护-blue">
+</a>
+<a href="https://github.com/OBKoro1/autoCommit/releases">
+    <img alt="cicd" src="https://img.shields.io/badge/版本打包-release-blue">
+</a>
+<a href="https://github.com/OBKoro1/autoCommit/blob/master/LICENSE">
+    <img alt="开源协议-MIT" src="https://img.shields.io/badge/license-MIT-blue">
+</a>
 
+
+### 项目介绍
+
+
+* 这是一个可以在任意时间范围自动提交commit的VSCode插件
+* 它可以自由控制每天的commit次数, 随机commit次数，使你的commit提交看起来更加逼真。
+* **它在平常不用运行，需要的时候花十几分钟一键刷commit，填满你的github首页绿色格子**。
 
 ### 使用效果
 
