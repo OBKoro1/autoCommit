@@ -6,9 +6,7 @@
 <a href="https://github.com/OBKoro1/autoCommit/wiki/%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E">
     <img alt="wiki文档详细" src="https://img.shields.io/badge/wiki文档-齐全详细-blue">
 </a>
-<a href="https://github.com/OBKoro1/koro1FileHeader/wiki/%E6%9B%B4%E6%96%B0%E6%97%A5%E5%BF%97">
-    <img alt="持续维护" src="https://img.shields.io/badge/2020年开源-持续维护-blue">
-</a>
+<img alt="持续维护" src="https://img.shields.io/badge/2020年开源-持续维护-blue">
 <a href="https://github.com/OBKoro1/autoCommit/releases">
     <img alt="cicd" src="https://img.shields.io/badge/版本打包-release-blue">
 </a>
