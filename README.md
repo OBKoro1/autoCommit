@@ -103,6 +103,16 @@ chrome插件**通过强制的手段禁止大家浪费时间摸鱼**，在上班/
 
 ![](https://github.com/OBKoro1/stop-mess-around/raw/dev/static/start.gif?raw=true)
 
+### [web-basics](https://github.com/OBKoro1/web-basics)
+
+收集和整理了一个大厂前端需要掌握能力的仓库。
+
+其中分为JS基础能力，大厂场景题、大厂面试真题。
+
+希望能够帮助大家提升自己的能力，在面试的时候能够游刃有余，轻松拿到高薪offer。
+
+![大厂前端需要掌握的能力](https://github.com/OBKoro1/web-basics/blob/main/static/web-basic-example.gif?raw=true)
+
 ### License
 
 [MIT](http://opensource.org/licenses/MIT)
