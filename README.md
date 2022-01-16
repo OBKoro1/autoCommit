@@ -101,7 +101,7 @@
 
 chrome插件**通过强制的手段禁止大家浪费时间摸鱼**，在上班/学习期间下意识的打开摸鱼网站, 自动检测摸鱼网站, 提示激励信息后, 关闭摸鱼网站。
 
-![](https://github.com/OBKoro1/stop-mess-around/raw/dev/static/start.gif?raw=true)
+![](https://github.com/OBKoro1/stop-mess-around/blob/dev/static/example/run-introduction.gif?raw=true)
 
 ### [web-basics](https://github.com/OBKoro1/web-basics)
 
