@@ -80,6 +80,16 @@
 * [配置及使用说明](https://github.com/OBKoro1/autoCommit/wiki/%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E)
 * [GitHub设置私有项目刷commit以及commit的次数与颜色](https://github.com/OBKoro1/autoCommit/wiki/GitHub%E8%AE%BE%E7%BD%AE%E7%A7%81%E6%9C%89%E9%A1%B9%E7%9B%AE%E5%88%B7commit%E4%BB%A5%E5%8F%8Acommit%E7%9A%84%E6%AC%A1%E6%95%B0%E4%B8%8E%E9%A2%9C%E8%89%B2)
 
+### 欢迎赞助
+
+开源不易，本插件的开发与维护全都是利用业余时间。
+
+开源工作对我来说就是用爱发电，从18年开始在社区开源到现在，可以说基本没有收益。
+
+如果觉得这个工具还不错, 对你有所帮助，就赞助支持一下我的工作吧。
+
+![](https://github.com/OBKoro1/koro1FileHeader/raw/master/images/money1.jpg?raw=true)
+
 ### 插件声明
 
 [autoCommit](https://github.com/OBKoro1/autoCommit)是本人兴之所至创建的个人项目，仅用于学习交流，禁止任何人商用以及用于非法之途。
@@ -122,14 +132,6 @@
 ### Star一下吧
 
 如果插件觉得还不错的话，就给个 [Star](https://github.com/OBKoro1/autoCommit) ⭐️ 鼓励一下我吧~
-
-### 欢迎赞助
-
-如果觉得插件还不错，对你有所帮助的话，就请我喝杯水吧~
-
-十块八块不嫌多，三块五块也是爱 😘
-
-![](https://github.com/OBKoro1/koro1FileHeader/raw/master/images/money1.jpg?raw=true)
 
 ### 联系我
 
