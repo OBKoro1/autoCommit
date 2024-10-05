@@ -68,7 +68,7 @@
    - `mac`: `command + p` window: `ctrl + p`
 2. 输入`> auto commit 将会看到如下图所示的命令选项，然后用鼠标点击或者回车都可启动插件。
 
-   - 注意有`>`符号，老是用人不知道怎么用 o(╥﹏╥)o
+   - 注意有`>`符号，老是有人不知道怎么用 o(╥﹏╥)o
    - 实际上可以输入下方选项的任何一段文字，都可以匹配到插件命令选项。
 
 ![image](https://github.com/OBKoro1/autoCommit/blob/master/images/command.png?raw=true)
