@@ -1,116 +1,48 @@
 {
-  "name": "autoCommit",
-  "displayName": "Auto Commit",
-  "description": "自动提交commit到github",
-  "publisher": "OBKoro1",
-  "version": "1.0.9",
+  "name": "auto-commit-cli",
+  "version": "2.0.0",
+  "description": "🚀 自动生成 Git 提交，填充 GitHub 贡献图 - CLI 版本",
+  "main": "dist/index.js",
+  "bin": {
+    "auto-commit": "dist/index.js"
+  },
   "scripts": {
-    "build": "vsce package",
-    "vscode:prepublish": "webpack --mode production",
-    "compile": "webpack --mode none",
-    "watch": "webpack --mode none --watch",
-    "pretest": "npm run compile",
-    "postinstall": "node ./node_modules/vscode/bin/install",
-    "test": "yarn run compile && node ./node_modules/vscode/bin/test",
-    "lint": "eslint --ext .ts,.vue src --fix"
+    "build": "tsc",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js",
+    "clean": "rm -rf dist",
+    "prepublishOnly": "npm run build",
+    "test": "node --test",
+    "link": "npm link",
+    "unlink": "npm unlink -g auto-commit-cli"
   },
-  "husky": {
-    "hooks": {
-      "pre-commit": "lint-staged",
-      "commit-msg": "commitlint -e $GIT_PARAMS"
-    }
-  },
-  "lint-staged": {
-    "src/**/*.{ts,vue}": [
-      "npm run lint",
-      "git add"
-    ]
-  },
-  "homepage": "https://github.com/OBKoro1/autoCommit",
-  "license": "MIT",
-  "author": {
-    "name": "OBKoro1",
-    "email": "obkoro1@foxmail.com",
-    "url": "http://obkoro1.com/web_accumulate/"
-  },
-  "icon": "images/icon.png",
-  "galleryBanner": {
-    "color": "#3B4859",
-    "theme": "dark"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/OBKoro1/autoCommit"
-  },
-  "bugs": {
-    "url": "https://github.com/OBKoro1/autoCommit/issues",
-    "email": "obkoro1@foxmail.com"
-  },
-  "categories": [
-    "Other"
+  "files": [
+    "dist"
   ],
-  "activationEvents": [
-    "onCommand:extension.autoCommit"
-  ],
-  "main": "./out/extension.js",
-  "contributes": {
-    "commands": [
-      {
-        "command": "extension.autoCommit",
-        "title": "控制Github绿色格子的commit数量",
-        "category": "auto commit Github自动提交 "
-      }
-    ]
-  },
-  "engines": {
-    "vscode": "^1.41.0"
-  },
   "keywords": [
-    "koroFileHeader",
-    "autoCommit",
-    "auto commit",
-    "autocommit",
-    "自动commit",
-    "vscode 自动commit",
-    "vscode github",
-    "vscode commit",
-    "github commit",
-    "github autoCommit",
-    "git commit",
-    "自动提交",
-    "git 自动提交",
-    "github 自动提交",
+    "auto-commit",
     "git",
     "github",
     "commit",
-    "koro1",
-    "obkoro1",
-    "github 自动commit"
+    "contribution",
+    "green-squares",
+    "cli",
+    "automation"
   ],
-  "devDependencies": {
-    "@commitlint/cli": "^11.0.0",
-    "@commitlint/config-conventional": "^11.0.0",
-    "@types/glob": "^7.1.1",
-    "@types/mocha": "^5.2.7",
-    "@types/node": "^12.11.7",
-    "@types/vscode": "^1.41.0",
-    "@typescript-eslint/eslint-plugin": "^4.4.1",
-    "@typescript-eslint/parser": "^4.6.1",
-    "copy-webpack-plugin": "^5.1.1",
-    "eslint": "^7.12.1",
-    "eslint-config-airbnb-typescript": "^12.0.0",
-    "glob": "^7.1.5",
-    "husky": "^4.3.6",
-    "mocha": "^6.2.2",
-    "ts-loader": "^6.2.1",
-    "typescript": "^3.9.7",
-    "vscode": "^1.1.37",
-    "webpack": "^4.44.2",
-    "webpack-cli": "^3.3.10"
+  "author": "Lynthar",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Lynthar/autoCommit"
+  },
+  "engines": {
+    "node": ">=14.0.0"
   },
   "dependencies": {
-    "eslint-plugin-import": "^2.22.1",
-    "lint-staged": "^10.5.3",
-    "moment": "^2.24.0"
+    "commander": "^11.1.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.0",
+    "typescript": "^5.3.0"
   }
 }

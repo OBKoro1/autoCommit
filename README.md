@@ -1,136 +1,368 @@
-# autoCommit
+# Auto-Commit CLI
 
-<a href="https://github.com/OBKoro1/koro1FileHeader">
-    <img alt="autoCommit Repo stars" src="https://img.shields.io/github/stars/OBKoro1/autoCommit">
-</a>
-<a href="https://github.com/OBKoro1/autoCommit/wiki/%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E">
-    <img alt="wiki文档详细" src="https://img.shields.io/badge/wiki文档-齐全详细-blue">
-</a>
-<a href="https://github.com/OBKoro1/autoCommit/releases">
-    <img alt="持续维护" src="https://img.shields.io/badge/2020年开源-持续维护-blue">
-    <img alt="cicd" src="https://img.shields.io/badge/版本打包-release-blue">
-</a>
-<a href="https://github.com/OBKoro1/autoCommit/blob/master/LICENSE">
-    <img alt="开源协议-MIT" src="https://img.shields.io/badge/license-MIT-blue">
-</a>
+🚀 自动生成 Git 提交，填充 GitHub 贡献图（绿格子）的命令行工具。
 
-### 项目介绍
+基于 [OBKoro1/autoCommit](https://github.com/OBKoro1/autoCommit) 重构，从 VSCode 扩展改为独立的 CLI 工具，更简洁、易用、健壮。
 
-- 这是一个可以在任意时间范围自动提交 commit 的 VSCode 插件
-- 它可以自由控制每天的 commit 次数, 随机 commit 次数，使你的 commit 提交看起来更加逼真。
-- **它在平常不用运行，需要的时候花十几分钟一键刷 commit，填满你的 github 首页绿色格子**。
+## 特性
 
-### 使用效果
+- 📅 **多日期范围支持** - 可配置多个日期范围，每个范围独立设置提交数
+- 🎲 **随机提交数** - 可选随机化每天的提交数量，使贡献图更自然
+- ⏰ **间隔提交** - 可选跳过某些天，避免连续提交看起来不自然
+- 🔄 **自动推送** - 提交完成后自动推送到远程仓库
+- ↩️ **安全回滚** - 支持取消操作和回滚已完成的提交
+- 📝 **配置文件** - 支持配置文件，方便重复使用
+- 🖥️ **交互模式** - 提供友好的交互式配置向导
+- 🔍 **预览模式** - 执行前可预览提交计划
 
-1. 使用本插件来控制 commit 次数.
-2. 如下图，你甚至可以规划一下`commit`次数，然后画出图形, 天空才是你的极限。
+## 安装
 
-![image](https://github.com/OBKoro1/autoCommit/blob/master/images/commit_img.png?raw=true)
+### 从源码安装
 
-#### 自动 commit 演示：
+```bash
+# 克隆仓库
+git clone https://github.com/Lynthar/autoCommit.git
+cd autoCommit
 
-![image](https://github.com/OBKoro1/autoCommit/blob/master/images/autoCommit.gif?raw=true)
+# 安装依赖
+npm install
 
-### 功能特性
+# 构建
+npm run build
 
-- **一键提交**: 设置好参数之后，一键超快提交`commit`
-- **选择多个日期范围**：一次操作即可提交不同日期`commit`, **还可以提交过去/未来日期的 commit**。
-- **控制每个日期的 commit 次数**: 可以用它来控制绿色格子的颜色，了解[commit 次数与颜色](https://github.com/OBKoro1/autoCommit/wiki/GitHub%E8%AE%BE%E7%BD%AE%E7%A7%81%E6%9C%89%E9%A1%B9%E7%9B%AE%E5%88%B7commit%E4%BB%A5%E5%8F%8Acommit%E7%9A%84%E6%AC%A1%E6%95%B0%E4%B8%8E%E9%A2%9C%E8%89%B2#commit%E6%AC%A1%E6%95%B0%E4%B8%8E%E9%A2%9C%E8%89%B2)
-- **随机 commit 次数**：随机 commit 次数让我们的提交看起来更加逼真。
-- **间隔提交 commit**: 在一定的时间长度内，随机选取几天不提交 commit
-- 取消 commit: 用于在`commit`期间取消并回滚到未提交版本
-- 超过 100 次提交，将强制考虑 10 秒是否要取消 commit。
-- 插件成功运行后，将自动保存配置参数，无须每次都要一通操作。
-- 提供完善的日志: 清晰的了解插件的运行情况
-- 后台运行，不影响编码、浏览网页等。
-- 运行超快，如下图 187 次 commit，20 秒搞定。
-- **觉得插件还不错的话，点个 Star 吧~**
+# 全局链接（可选）
+npm link
+```
 
-#### 提交以前和未来的 commit
+### 直接使用
 
-在 19 年 12 月我创建了一个测试账号：[koroTest](https://github.com/koroTest)，经过测试：
+```bash
+# 不安装，直接运行
+npx auto-commit-cli
+```
 
-1. 成功提交 17 年的 10 月份的 commit。
-2. 现在 2020 年 1 月份，成功提交了 2020 年 2 月份的 commit。
-3. 具体能提交最早和最晚的日期没有测试过，有兴趣的可以试试~
+## 快速开始
 
-### 仓库地址:
+### 方式一：交互模式（推荐新手）
 
-[autoCommit](https://github.com/OBKoro1/autoCommit)
+```bash
+auto-commit run
+```
 
-### 安装
+如果没有配置文件，会自动进入交互式配置向导：
 
-在 Vscode 扩展商店中搜索`Auto Commit`,点击安装即可。
+```
+🚀 Auto-Commit CLI 交互式配置向导
 
-### 插件入口
+──────────────────────────────────────────────────
+📁 Git 仓库路径 (默认: 当前目录): /path/to/repo
+✅ 仓库路径: /path/to/repo
 
-1. 使用快捷键打开 VSCode 的命令面板。
-   - `mac`: `command + p` window: `ctrl + p`
-2. 输入`> auto commit 将会看到如下图所示的命令选项，然后用鼠标点击或者回车都可启动插件。
+📄 提交文件名 (默认: commit.md):
 
-   - 注意有`>`符号，老是用人不知道怎么用 o(╥﹏╥)o
-   - 实际上可以输入下方选项的任何一段文字，都可以匹配到插件命令选项。
+💬 提交信息 (默认: auto commit):
 
-![image](https://github.com/OBKoro1/autoCommit/blob/master/images/command.png?raw=true)
+📅 配置日期范围
+--- 日期范围 #1 ---
+   开始日期 (YYYY-MM-DD): 2024-01-01
+   结束日期 (YYYY-MM-DD): 2024-06-30
+   每天提交次数 (默认: 3):
 
-### 文档
+🎲 随机提交设置
+   是否启用随机提交数? (Y/n):
 
-- [配置及使用说明](https://github.com/OBKoro1/autoCommit/wiki/%E9%85%8D%E7%BD%AE%E5%8F%8A%E4%BD%BF%E7%94%A8%E8%AF%B4%E6%98%8E)
-- [GitHub 设置私有项目刷 commit 以及 commit 的次数与颜色](https://github.com/OBKoro1/autoCommit/wiki/GitHub%E8%AE%BE%E7%BD%AE%E7%A7%81%E6%9C%89%E9%A1%B9%E7%9B%AE%E5%88%B7commit%E4%BB%A5%E5%8F%8Acommit%E7%9A%84%E6%AC%A1%E6%95%B0%E4%B8%8E%E9%A2%9C%E8%89%B2)
+⏰ 间隔提交设置
+   是否启用间隔提交? (Y/n):
 
-### 用爱发电，求赞助 😭
+📤 推送设置
+   提交完成后自动推送? (Y/n):
+```
 
-开源不易，本插件的开发与维护全都是利用业余时间。
+### 方式二：命令行参数
 
-开源工作对我来说就是用爱发电，从 18 年开始在社区开源到现在，可以说基本没有收益。
+```bash
+# 基本用法
+auto-commit run --from 2024-01-01 --to 2024-06-30
 
-如果觉得这个效率工具还不错, 对你有所帮助，就赞助支持一下我的工作吧。
+# 完整参数
+auto-commit run \
+  --repo /path/to/repo \
+  --from 2024-01-01 \
+  --to 2024-06-30 \
+  --commits 5 \
+  --message "daily update" \
+  --random \
+  --random-range 1-5 \
+  --interval \
+  --push
+```
 
-<img src="https://raw.githubusercontent.com/OBKoro1/koro1FileHeader/dev/images/pay.jpg" alt="赞助" width="500px" style="display: block;"/>
+### 方式三：配置文件
 
-### 插件声明
+1. 初始化配置文件：
 
-[autoCommit](https://github.com/OBKoro1/autoCommit)是本人兴之所至创建的个人项目，仅用于学习交流，禁止任何人商用以及用于非法之途。
+```bash
+auto-commit init
+# 或交互式初始化
+auto-commit init -i
+```
 
-插件如构成侵权，请通过邮件联系我。
+2. 编辑 `.autocommitrc.json`：
 
-### 其他开源推荐
+```json
+{
+  "repoPath": "/path/to/your/repo",
+  "commitFile": "commit.md",
+  "commitMessage": "auto commit",
+  "dateRanges": [
+    {
+      "start": "2024-01-01",
+      "end": "2024-03-31",
+      "commitsPerDay": 3
+    },
+    {
+      "start": "2024-04-01",
+      "end": "2024-06-30",
+      "commitsPerDay": 5
+    }
+  ],
+  "randomCommits": true,
+  "randomCommitRange": [1, 5],
+  "intervalCommit": true,
+  "intervalDays": 7,
+  "skipDays": 2,
+  "autoPush": true
+}
+```
 
-#### [koroFileHeader](https://github.com/OBKoro1/koro1FileHeader)
+3. 执行：
 
-1. 它是用于一键生成文件头部注释并自动更新最后编辑人和编辑时间、函数注释自动生成和参数提取。
-2. 插件支持所有主流语言,功能强大，配置灵活方便，文档齐全，食用简单！
-3. 插件从 2018 年 5 月维护至今, 3K+ Star，关闭 issue 300+
-4. 目前拥有 250K+的用户，VSCode 图表统计日安装用户 100 多-400 多人，帮助用户养成良好的编码习惯，规范整个团队风格。
+```bash
+auto-commit run
+```
 
-![头部注释](https://raw.githubusercontent.com/OBKoro1/koro1FileHeader/master/images/example.gif)
+## 命令详解
 
-![函数注释](https://github.com/OBKoro1/koro1FileHeader/raw/master/images/function-params.gif?raw=true)
+### `run` - 执行提交
 
-#### [stop-mess-around](https://github.com/OBKoro1/stop-mess-around)
+```bash
+auto-commit run [options]
 
-减少摸鱼的时间和频率的 Chrome 插件：**在上班/学习期间很容易下意识的打开摸鱼网站，插件帮助我们减少摸鱼的时间和频率，提高我们上班和学习的效率，节省时间用于学习提升自己或者享受生活**。
+选项:
+  -c, --config <path>       配置文件路径 (默认: .autocommitrc.json)
+  -r, --repo <path>         Git 仓库路径 (默认: 当前目录)
+  --from <date>             开始日期 (YYYY-MM-DD)
+  --to <date>               结束日期 (YYYY-MM-DD)
+  --commits <number>        每天提交次数 (默认: 3)
+  -m, --message <message>   提交信息 (默认: auto commit)
+  -f, --file <filename>     提交文件名 (默认: commit.md)
+  --random                  启用随机提交数
+  --random-range <range>    随机提交数范围 (如: 1-5)
+  --interval                启用间隔提交
+  --interval-days <days>    间隔天数 (默认: 7)
+  --skip-days <days>        每个间隔跳过的天数 (默认: 2)
+  --push                    自动推送 (默认开启)
+  --no-push                 不自动推送
+  --dry-run                 预览模式，不实际执行
+  -y, --yes                 跳过确认
+  -s, --silent              静默模式
+```
 
-![](https://github.com/OBKoro1/stop-mess-around/blob/dev/static/example/run-introduction.gif?raw=true)
+### `init` - 初始化配置
 
-### [web-basics](https://github.com/OBKoro1/web-basics)
+```bash
+auto-commit init [options]
 
-收集和整理了一个大厂前端需要掌握能力的仓库。
+选项:
+  -r, --repo <path>   Git 仓库路径 (默认: 当前目录)
+  -f, --force         覆盖已存在的配置文件
+  -i, --interactive   交互式配置
+```
 
-其中分为 JS 基础能力，大厂场景题、大厂面试真题。
+### `preview` - 预览计划
 
-希望能够帮助大家提升自己的能力，在面试的时候能够游刃有余，轻松拿到高薪 offer。
+```bash
+auto-commit preview [options]
 
-![大厂前端需要掌握的能力](https://github.com/OBKoro1/web-basics/blob/main/static/web-basic-example.gif?raw=true)
+选项:
+  -c, --config <path>   配置文件路径
+  --from <date>         开始日期
+  --to <date>           结束日期
+  --commits <number>    每天提交次数
+```
 
-### License
+示例输出：
 
-[MIT](http://opensource.org/licenses/MIT)
+```
+📅 提交计划预览
+────────────────────────────────────────
+📊 统计信息:
+   • 总天数: 120 天
+   • 总提交: 360 次
+   • 日期范围: 2024-01-01 ~ 2024-04-30
+   • 平均每天: 3 次
 
-### Star 一下吧
+📋 详细计划:
+   2024-01-01: ███ (3)
+   2024-01-02: █████ (5)
+   2024-01-03: ██ (2)
+   2024-01-05: ████ (4)
+   ... 还有 116 天
+────────────────────────────────────────
+```
 
-如果插件觉得还不错的话，就给个 [Star](https://github.com/OBKoro1/autoCommit) ⭐️ 鼓励一下我吧~
+### `rollback` - 回滚提交
 
-### 联系我
+```bash
+auto-commit rollback <count> [options]
 
-[掘金](https://juejin.im/user/78820536236951)、[前端进阶积累](http://obkoro1.com/web_accumulate/)、[公众号](https://user-gold-cdn.xitu.io/2018/5/1/1631b6f52f7e7015?w=344&h=344&f=jpeg&s=8317)、[GitHub](https://github.com/OBKoro1)、[微信](https://raw.githubusercontent.com/OBKoro1/articleImg_src/master/weibo_img_move/005Y4rCogy1fsnslyz5pnj309j0cdgm6.jpg):OBkoro1、邮箱：obkoro1@foxmail.com
+参数:
+  count               要回滚的提交数量
+
+选项:
+  -r, --repo <path>   Git 仓库路径 (默认: 当前目录)
+  -y, --yes           跳过确认
+```
+
+## 配置文件详解
+
+完整的配置文件示例：
+
+```json
+{
+  "repoPath": "/path/to/your/repo",
+  "commitFile": "commit.md",
+  "commitMessage": "auto commit",
+  "dateRanges": [
+    {
+      "start": "2024-01-01",
+      "end": "2024-06-30",
+      "commitsPerDay": 3
+    }
+  ],
+  "randomCommits": true,
+  "randomCommitRange": [1, 5],
+  "intervalCommit": true,
+  "intervalDays": 7,
+  "skipDays": 2,
+  "autoPush": true
+}
+```
+
+### 配置项说明
+
+| 配置项 | 类型 | 默认值 | 说明 |
+|--------|------|--------|------|
+| `repoPath` | string | 必填 | Git 仓库的绝对路径 |
+| `commitFile` | string | `commit.md` | 用于记录提交的文件名 |
+| `commitMessage` | string | `auto commit` | 提交信息 |
+| `dateRanges` | array | 必填 | 日期范围配置数组 |
+| `dateRanges[].start` | string | 必填 | 开始日期 (YYYY-MM-DD) |
+| `dateRanges[].end` | string | 必填 | 结束日期 (YYYY-MM-DD) |
+| `dateRanges[].commitsPerDay` | number | 必填 | 每天提交次数 (1-88) |
+| `randomCommits` | boolean | `false` | 是否启用随机提交数 |
+| `randomCommitRange` | [number, number] | `[1, 5]` | 随机提交数范围 |
+| `intervalCommit` | boolean | `false` | 是否启用间隔提交 |
+| `intervalDays` | number | `7` | 间隔天数 |
+| `skipDays` | number | `2` | 每个间隔跳过的天数 |
+| `autoPush` | boolean | `true` | 是否自动推送 |
+
+## 使用场景
+
+### 场景一：补充历史提交
+
+```bash
+# 补充过去一年的提交
+auto-commit run --from 2023-01-01 --to 2023-12-31 --random --interval
+```
+
+### 场景二：预设未来提交
+
+```bash
+# 预设未来一个月的提交
+auto-commit run --from 2024-07-01 --to 2024-07-31 --commits 2
+```
+
+### 场景三：测试提交（不推送）
+
+```bash
+# 只在本地生成提交，不推送
+auto-commit run --from 2024-01-01 --to 2024-01-31 --no-push
+```
+
+### 场景四：预览计划
+
+```bash
+# 查看将会生成的提交计划
+auto-commit run --from 2024-01-01 --to 2024-06-30 --dry-run
+```
+
+## 安全特性
+
+1. **取消保护**: 在执行过程中可以按 `Ctrl+C` 取消，会提示是否回滚已完成的提交
+
+2. **大量提交保护**: 当提交数量超过 100 次时，推送前会等待 10 秒，给用户取消的机会
+
+3. **配置验证**: 执行前会严格验证配置，避免无效操作
+
+4. **Git 仓库检查**: 自动检测目录是否是有效的 Git 仓库
+
+## 与原项目的区别
+
+| 特性 | 原 VSCode 扩展 | CLI 版本 |
+|------|---------------|----------|
+| 运行环境 | 需要 VSCode | 独立命令行 |
+| 配置方式 | GUI 表单 | 配置文件/命令行/交互 |
+| 依赖 | VSCode API、Vue、Element UI | 仅 commander |
+| 代码量 | ~2000 行 | ~1000 行 |
+| 可移植性 | 仅 VSCode | 任何终端 |
+| 自动化 | 手动触发 | 可集成到脚本/CI |
+
+## 开发
+
+```bash
+# 安装依赖
+npm install
+
+# 开发模式（监听文件变化）
+npm run dev
+
+# 构建
+npm run build
+
+# 本地测试
+npm start run --help
+
+# 全局链接测试
+npm link
+auto-commit --help
+```
+
+## 目录结构
+
+```
+auto-commit-cli/
+├── src/
+│   ├── index.ts           # CLI 入口
+│   ├── types.ts           # 类型定义
+│   ├── lib/
+│   │   ├── config.ts      # 配置管理
+│   │   ├── git.ts         # Git 操作
+│   │   ├── scheduler.ts   # 日期调度
+│   │   ├── executor.ts    # 执行引擎
+│   │   └── interactive.ts # 交互模式
+│   └── utils/
+│       └── index.ts       # 工具函数
+├── dist/                  # 编译输出
+├── package.json
+├── tsconfig.json
+└── README.md
+```
+
+## License
+
+MIT
+
+## 致谢
+
+感谢 [OBKoro1](https://github.com/OBKoro1) 的原始 [autoCommit](https://github.com/OBKoro1/autoCommit) 项目提供的灵感。

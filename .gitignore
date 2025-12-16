@@ -1,5 +1,28 @@
+# Dependencies
+node_modules/
+
+# Build output
+dist/
+out/
+
+# IDE
+.vscode/
+.idea/
+
+# OS
 .DS_Store
-out
-node_modules
-.vscode-test/
-*.vsix
+Thumbs.db
+
+# Logs
+*.log
+npm-debug.log*
+
+# Test
+coverage/
+
+# Config files (user-specific)
+.autocommitrc.json
+
+# Lock files (optional - remove if you want to track)
+package-lock.json
+yarn.lock
